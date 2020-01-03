@@ -1,26 +1,19 @@
 import React from "react";
-import * as Font from "expo-font";
+import { Text, View, TouchableOpacity } from "react-native";
 import { styles } from "./styles";
-
-import {
-    Text,
-    TextInput,
-    View
-  } from "react-native";
+import * as Font from "expo-font";
 
 interface Props {
   label: string;
-  placeholder: string;
-  password: boolean;
   marginTop: number;
   callback: any;
 }
 
-export default class InputComponent extends React.Component<Props> {
+export default class ButtonComponent extends React.Component<Props> {
   state = {
     fontsLoaded: false
   };
-  
+
   async componentWillMount() {
     await Font.loadAsync({
       "quicksand-regular": require("../../assets/fonts/Quicksand-Regular.ttf"),
@@ -32,13 +25,14 @@ export default class InputComponent extends React.Component<Props> {
   render() {
     if (this.state.fontsLoaded) {
       return (
-        <View style={{marginTop: this.props.marginTop}}>
-          <Text style={styles.label}>
-            {this.props.label}
-          </Text>
-          <TextInput style={styles.input} secureTextEntry={this.props.password} 
-                     placeholder={this.props.placeholder} 
-                     onChangeText={text => this.props.callback(text)}></TextInput>
+        <View style={{ marginTop: this.props.marginTop }}>
+          <TouchableOpacity
+            style={styles.signInButton}
+            activeOpacity={0.9}
+            onPress={() => this.props.callback()}
+          >
+            <Text style={styles.buttonText}>{this.props.label}</Text>
+          </TouchableOpacity>
         </View>
       );
     } else {
