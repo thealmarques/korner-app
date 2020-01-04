@@ -59,7 +59,7 @@ export default class LoginPage extends React.Component<Props> {
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(async (user) => {
       this.props.navigation.navigate('App');
     }).catch((error) => {
-      Alert.alert('Error', error);
+      Alert.alert('Error', error.message);
     });
   }
 }
