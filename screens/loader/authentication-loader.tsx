@@ -11,7 +11,7 @@ interface Props {
   navigation: any
 }
 
-export default class AuthenticationMiddleware extends React.Component<Props> {
+export default class AuthenticationLoader extends React.Component<Props> {
   constructor(props) {
     super(props);
     // Initialize firebase flow...

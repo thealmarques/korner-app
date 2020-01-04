@@ -2,7 +2,7 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import IntroPage from './screens/intro/intro';
 import LoginPage from './screens/login/login';
-import AuthenticationMiddleware from './screens/middleware/authentication-middleware';
+import AuthenticationLoader from './screens/loader/authentication-loader';
 import HomePage from './screens/home/home';
 
 
@@ -22,12 +22,12 @@ const AuthStack = createStackNavigator({
 const App = createAppContainer(
   createSwitchNavigator(
     {
-      AuthLoading: AuthenticationMiddleware,
+      AuthLoader: AuthenticationLoader,
       App: AppStack,
       Auth: AuthStack,
     },
     {
-      initialRouteName: 'AuthLoading',
+      initialRouteName: 'AuthLoader',
     }
   )
 );
