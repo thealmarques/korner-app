@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     marginTop: hp('8%'),
+    marginBottom: hp('5%'),
     paddingBottom: 0,
     paddingHorizontal: wp('7%'),
     flex: 1
@@ -14,7 +15,7 @@ export const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   forms: {
-    flex: 2,
+    flex: 3,
     width: "100%"
   },
   forgot: {
@@ -23,5 +24,23 @@ export const styles = StyleSheet.create({
     fontSize: wp('3%'),
     fontFamily: "quicksand-bold",
     textAlign: "right"
+  },
+  picture: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start"
+  },
+  attachement: {
+    width: wp('8.5%'),
+    height: hp('8.5%'),
+    resizeMode: 'contain',
+    marginTop: hp('2%'),
+    marginRight: wp('4%')
+  },
+  text: {
+    color: "#7C766E",
+    marginTop: hp('1.5%'),
+    fontSize: wp('3.6%'),
+    fontFamily: "quicksand-bold"
   }
 });

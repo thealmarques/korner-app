@@ -38,13 +38,13 @@ export default class LoginPage extends React.Component<Props> {
         <View style={styles.container}>
           <View style={styles.header}>
             <BackComponent back={() => goBack()}></BackComponent>
-            <Text style={{ marginTop: hp('3%'), fontFamily: "quicksand-bold", fontSize: wp('6%') }}>
+            <Text style={{ marginTop: hp('2%'), fontFamily: "quicksand-bold", fontSize: wp('6%') }}>
               Login into {'\n'}your account
             </Text>
           </View>
           <View style={styles.forms}>
-            <InputComponent callback={(text) => this.state.email=text} label="Email" placeholder="Enter your email" password={false} marginTop={hp('0%')}></InputComponent>
-            <InputComponent callback={(text) => this.state.password=text} label="Password" placeholder="Enter your password" password={true} marginTop={hp('2%')}></InputComponent>
+            <InputComponent callback={(text) => this.setState({email: text})} label="Email" placeholder="Enter your email" password={false} marginTop={hp('0%')}></InputComponent>
+            <InputComponent callback={(text) => this.setState({password: text})} label="Password" placeholder="Enter your password" password={true} marginTop={hp('2%')}></InputComponent>
             <Text style={styles.forgot} onPress={() => alert('Coming soon')}>Forgot password ?</Text>
             <ButtonComponent label='Sign In!' callback={() => this.signIn()} marginTop={hp('0%')}></ButtonComponent>
           </View>

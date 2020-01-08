@@ -45,7 +45,7 @@ export default class IntroPage extends React.Component<Props> {
               <Text style={{marginTop: hp('2%'), fontFamily: "quicksand-bold", fontSize: wp('3%'), color: "#707070", textAlign: "center" }}>
                 Let the community know and keep track of what's new.
               </Text>
-              <TouchableOpacity style={styles.signInButton} activeOpacity={0.9} onPress={() => navigate('Login')}>
+              <TouchableOpacity style={styles.signInButton} activeOpacity={0.9} onPress={() => navigate('Register')}>
                 <Text style={styles.buttonText}>Sign Up!</Text>
               </TouchableOpacity>
             </View>
