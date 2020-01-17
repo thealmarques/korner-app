@@ -19,8 +19,8 @@ export default class HomePage extends React.Component<Props> {
   }
   
   private async getLocation() {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
+    const response: any = await Permissions.askAsync(Permissions.LOCATION);
+    if (response.granted !== 'granted' && response.granted) {
       return false;
     }
 
@@ -80,8 +80,8 @@ export default class HomePage extends React.Component<Props> {
           region={{
             latitude: this.state.region.coords.latitude,
             longitude: this.state.region.coords.longitude,
-            latitudeDelta: 0.194,
-            longitudeDelta: 0.095,
+            latitudeDelta: 0,
+            longitudeDelta: 0
           }}
           rotateEnabled={false}
           style={{flex: 1}}
