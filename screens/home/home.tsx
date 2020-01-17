@@ -7,6 +7,7 @@ import {
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import MapView from 'react-native-maps';
+import WelcomeNotificationComponent from "../../shared/components/welcome/welcome";
 
 interface Props {
   navigation: any;
@@ -15,7 +16,8 @@ interface Props {
 export default class HomePage extends React.Component<Props> {  
   state = {
     region: null,
-    locationName: null
+    locationName: null,
+    showWelcome: true
   }
   
   private async getLocation() {
@@ -69,8 +71,17 @@ export default class HomePage extends React.Component<Props> {
       <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
         <Header locationName={this.state.locationName} navigation={this.props.navigation}></Header>
         {this.showMap()}
+        {this.showWelcomeMessage()}
       </SafeAreaView>
     );
+  }
+
+  showWelcomeMessage() {
+    if (this.state.showWelcome) {
+      return (
+        <WelcomeNotificationComponent onClose={() => this.setState({showWelcome: false})}></WelcomeNotificationComponent>
+      );
+    }
   }
 
   showMap() {

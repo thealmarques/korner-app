@@ -15,7 +15,7 @@ export default class LocationComponent extends React.Component<Props> {
         <View>
           <TouchableOpacity
             style={styles.container}
-            onPress={() => alert("Oi")}
+            onPress={() => alert("To navigate in the future")}
           >
             <Image
               style={styles.stretch}
