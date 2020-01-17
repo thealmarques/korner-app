@@ -63,18 +63,14 @@ export default class RegisterPage extends React.Component<Props> {
                       if (!result.cancelled) {
                         const {height, width, type, uri} = result;
                         const blob = await this.convertUriToBlob(uri);
-                        this.setState({base64Image: blob ? blob : null});
+                        this.setState({base64Image: blob ? blob : undefined});
                       }
-                      //await firebase.storage().ref('/test').child('photo').putString(value.base64, 'base64', {contentType: 'image/jpg'});
-                      //this.setState({
-                      //    base64Image: value.base64 ? value.base64 : ''
-                      //});
                     });
                 }}>
                     <Image style={styles.attachement} source={require("../../shared/assets/attach.png")}></Image>
                 </TouchableOpacity>
                 <Text style={styles.text}>
-                    {this.state.base64Image > 0 ? 'Wow. Awesome picture' : 'Upload your profile picture \n(optioal)'}</Text>
+                    {this.state.base64Image ? 'Wow. Awesome picture' : 'Upload your profile picture \n(optioal)'}</Text>
                 </View>
             </ScrollView>
             <ButtonComponent label='Sign Up!' callback={() => this.signUp()} marginTop={hp('0%')}></ButtonComponent>
@@ -109,7 +105,7 @@ export default class RegisterPage extends React.Component<Props> {
     
     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(async (user) => {
       if (this.state.base64Image) {
-        await firebase.storage().ref('/test').child('photo').put(this.state.base64Image, {
+        await firebase.storage().ref('/profile-pictures').child(user.user.uid).put(this.state.base64Image, {
           contentType: 'image/jpeg'
         });
       }

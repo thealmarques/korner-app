@@ -1,35 +1,54 @@
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
-import IntroPage from './screens/intro/intro';
-import LoginPage from './screens/login/login';
-import RegisterPage from './screens/register/register';
-import AuthenticationLoader from './screens/loader/authentication-loader';
-import HomePage from './screens/home/home';
-import {decode as atob, encode as btoa} from 'base-64';
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import IntroPage from "./screens/intro/intro";
+import LoginPage from "./screens/login/login";
+import RegisterPage from "./screens/register/register";
+import HomePage from "./screens/home/home";
+import DependenciesLoader from "./screens/loader/dependencies";
+import { createDrawerNavigator } from "react-navigation-drawer";
 
-const navigationOptions = {
-  header: null,
-};
-
-const AppStack = createStackNavigator({
-  Home: {screen: HomePage, navigationOptions}
+const AppStack = createDrawerNavigator({
+  Home: {
+    screen: HomePage
+  },
+  Intro: {
+    screen: IntroPage
+  },
+},
+{
+  initialRouteName: 'Home'
 });
 
 const AuthStack = createStackNavigator({
-  Intro: {screen: IntroPage, navigationOptions},
-  Login: {screen: LoginPage, navigationOptions},
-  Register: {screen: RegisterPage, navigationOptions}
+  Intro: {
+    screen: IntroPage,
+    navigationOptions: {
+      header: null
+    }
+  },
+  Login: {
+    screen: LoginPage,
+    navigationOptions: {
+      header: null
+    }
+  },
+  Register: {
+    screen: RegisterPage,
+    navigationOptions: {
+      header: null
+    }
+  }
 });
 
 const App = createAppContainer(
   createSwitchNavigator(
     {
-      AuthLoader: AuthenticationLoader,
+      Dependencies: DependenciesLoader,
       App: AppStack,
-      Auth: AuthStack,
+      Auth: AuthStack
     },
     {
-      initialRouteName: 'AuthLoader',
+      initialRouteName: "Dependencies"
     }
   )
 );

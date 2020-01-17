@@ -17,23 +17,13 @@ interface Props {
 }
 
 export default class LoginPage extends React.Component<Props> {
-  // ecra de loading para quando os resources não estão carregados
   state = {
-    fontsLoaded: false,
     email: '',
     password: ''
   };
-  async componentWillMount() {
-    await Font.loadAsync({
-      "quicksand-regular": require("../../shared/assets/fonts/Quicksand-Regular.ttf"),
-      "quicksand-bold": require("../../shared/assets/fonts/Quicksand-Bold.ttf")
-    });
-    this.setState({ fontsLoaded: true });
-  }
 
   render() {
     const { goBack } = this.props.navigation;
-    if (this.state.fontsLoaded) {
       return (
         <View style={styles.container}>
           <View style={styles.header}>
@@ -50,9 +40,6 @@ export default class LoginPage extends React.Component<Props> {
           </View>
         </View>
       );
-    } else {
-      return <Text>Loading... (change to a loading page)</Text>;
-    }
   }
 
   signIn() {
