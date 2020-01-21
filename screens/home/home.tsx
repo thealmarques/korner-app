@@ -4,7 +4,7 @@ import Header from "../../shared/components/header/header";
 import { AsyncStorage, Image } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-import MapView, { MapEvent, Marker } from "react-native-maps";
+import MapView, { MapEvent, Marker, Region } from "react-native-maps";
 import WelcomeNotificationComponent from "../../shared/components/welcome/welcome";
 interface Props {
   navigation: any;
@@ -111,6 +111,7 @@ export default class HomePage extends React.Component<Props> {
           rotateEnabled={false}
           style={{ flex: 1 }}
           onPress={(location: MapEvent) => this.onMapPress(location)}
+          onRegionChangeComplete={(region: Region) => this.onRegionChange(region)}
         >
           {this.showMarkers()}
         </MapView>
@@ -152,5 +153,14 @@ export default class HomePage extends React.Component<Props> {
 
   onMarkerPress(location) {
     console.log(location.latitude);
+    console.log(location.longitude);
+  }
+
+  onRegionChange(region: Region) {
+    console.log(region);
+  }
+
+  fetchMarkers(region: Region) {
+    
   }
 }
