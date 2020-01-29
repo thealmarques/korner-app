@@ -16,7 +16,7 @@ export default class AuthenticationLoader extends React.Component<Props> {
     super(props);
     // Initialize firebase flow...
     if (!firebase.apps.length) {
-     firebase.initializeApp(firebaseConfig);
+      firebase.initializeApp(firebaseConfig);
     }
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
   }

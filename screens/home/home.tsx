@@ -1,11 +1,13 @@
 import React from "react";
 import { SafeAreaView } from "react-navigation";
 import Header from "../../shared/components/header/header";
-import { AsyncStorage, Image } from "react-native";
+import { AsyncStorage, Image, YellowBox } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import MapView, { MapEvent, Marker, Region } from "react-native-maps";
 import WelcomeNotificationComponent from "../../shared/components/welcome/welcome";
+import * as firebase from "firebase";
+import "firebase/firestore";
 interface Props {
   navigation: any;
 }
@@ -60,12 +62,13 @@ export default class HomePage extends React.Component<Props> {
       });
     } else {
       this.setState({
-        locationName: 'Define location'
+        locationName: "Define location"
       });
     }
   }
 
   async componentWillMount() {
+    YellowBox.ignoreWarnings(["Setting a timer"]);
     AsyncStorage.removeItem("LOCATION");
     const location = await this.readLocation();
     if (location !== null) {
@@ -73,6 +76,7 @@ export default class HomePage extends React.Component<Props> {
     } else {
       await this.getLocation();
     }
+    this.fetchMarkers();
   }
 
   render() {
@@ -111,7 +115,9 @@ export default class HomePage extends React.Component<Props> {
           rotateEnabled={false}
           style={{ flex: 1 }}
           onPress={(location: MapEvent) => this.onMapPress(location)}
-          onRegionChangeComplete={(region: Region) => this.onRegionChange(region)}
+          onRegionChangeComplete={(region: Region) =>
+            this.onRegionChange(region)
+          }
         >
           {this.showMarkers()}
         </MapView>
@@ -133,8 +139,12 @@ export default class HomePage extends React.Component<Props> {
   showMarkers() {
     return this.state.markers.map((marker, index) => {
       return (
-        <Marker key={index} coordinate={marker.coordinate} onPress={() => this.onMarkerPress(marker.coordinate)}>
-          <Image source={require('../../shared/assets/marker.png')} />
+        <Marker
+          key={index}
+          coordinate={marker.coordinate}
+          onPress={() => this.onMarkerPress(marker.coordinate)}
+        >
+          <Image source={require("../../shared/assets/marker.png")} />
         </Marker>
       );
     });
@@ -151,16 +161,26 @@ export default class HomePage extends React.Component<Props> {
     });
   }
 
-  onMarkerPress(location) {
-    console.log(location.latitude);
-    console.log(location.longitude);
-  }
+  onMarkerPress(location) {}
 
-  onRegionChange(region: Region) {
-    console.log(region);
-  }
+  onRegionChange(region: Region) {}
 
-  fetchMarkers(region: Region) {
-    
+  async fetchMarkers() {
+    var database = await firebase.firestore();
+    const ref = database
+      .collection("suggestions")
+      .get()
+      .then(data => {
+        data.docs.map(doc => {
+          this.setState({
+            markers: this.state.markers.concat({
+              coordinate: {
+                latitude: Number(doc.get("latitude")),
+                longitude: Number(doc.get("longitude"))
+              }
+            })
+          });
+        });
+      });
   }
 }
