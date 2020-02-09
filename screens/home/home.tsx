@@ -8,6 +8,7 @@ import MapView, { MapEvent, Marker, Region } from "react-native-maps";
 import WelcomeNotificationComponent from "../../shared/components/welcome/welcome";
 import * as firebase from "firebase";
 import "firebase/firestore";
+import CreateEventComponent from "../../shared/components/new-event/create";
 interface Props {
   navigation: any;
 }
@@ -19,7 +20,8 @@ export default class HomePage extends React.Component<Props> {
     showWelcome: true,
     latitudeDelta: 0,
     longitudeDelta: 0,
-    markers: []
+    markers: [],
+    showCreateEvent: false
   };
 
   private async getLocation() {
@@ -88,6 +90,7 @@ export default class HomePage extends React.Component<Props> {
         ></Header>
         {this.showMap()}
         {this.showWelcomeMessage()}
+        {this.showCreateEvent()}
       </SafeAreaView>
     );
   }
@@ -98,6 +101,16 @@ export default class HomePage extends React.Component<Props> {
         <WelcomeNotificationComponent
           onClose={() => this.setState({ showWelcome: false })}
         ></WelcomeNotificationComponent>
+      );
+    }
+  }
+
+  showCreateEvent() {
+    if (this.state.showCreateEvent) {
+      return (
+        <CreateEventComponent onPress={() => console.log('Pressed')} 
+                              onClose={() => this.setState({ showCreateEvent: false })}>
+        </CreateEventComponent>
       );
     }
   }
@@ -151,6 +164,8 @@ export default class HomePage extends React.Component<Props> {
   }
 
   onMapPress(location: MapEvent) {
+    this.setState({ showCreateEvent: true })
+    /*
     this.setState({
       markers: this.state.markers.concat({
         coordinate: {
@@ -158,10 +173,12 @@ export default class HomePage extends React.Component<Props> {
           longitude: Number(location.nativeEvent.coordinate.longitude)
         }
       })
-    });
+    });*/
   }
 
-  onMarkerPress(location) {}
+  onMarkerPress(location) {
+
+  }
 
   onRegionChange(region: Region) {}
 
