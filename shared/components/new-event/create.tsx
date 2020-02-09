@@ -54,7 +54,7 @@ export default class CreateEventComponent extends React.Component<Props> {
                 <View style={styles.textWrapper}>
                   <Text style={styles.title}>Suggest</Text>
                   <Text style={styles.subtitle}>
-                    If you feel the need for a new local business test test
+                    If you feel the need for a new local business
                   </Text>
                 </View>
               }
