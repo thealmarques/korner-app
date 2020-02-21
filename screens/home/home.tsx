@@ -5,7 +5,6 @@ import { AsyncStorage, Image, YellowBox } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import MapView, { MapEvent, Marker, Region } from "react-native-maps";
-import WelcomeNotificationComponent from "../../shared/components/welcome/welcome";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import CreateEventComponent from "../../shared/components/new-event/create";
@@ -17,7 +16,6 @@ export default class HomePage extends React.Component<Props> {
   state = {
     region: null,
     locationName: null,
-    showWelcome: true,
     latitudeDelta: 0,
     longitudeDelta: 0,
     markers: [],
@@ -89,20 +87,9 @@ export default class HomePage extends React.Component<Props> {
           navigation={this.props.navigation}
         ></Header>
         {this.showMap()}
-        {this.showWelcomeMessage()}
         {this.showCreateEvent()}
       </SafeAreaView>
     );
-  }
-
-  showWelcomeMessage() {
-    if (this.state.showWelcome) {
-      return (
-        <WelcomeNotificationComponent
-          onClose={() => this.setState({ showWelcome: false })}
-        ></WelcomeNotificationComponent>
-      );
-    }
   }
 
   showCreateEvent() {
@@ -157,7 +144,7 @@ export default class HomePage extends React.Component<Props> {
           coordinate={marker.coordinate}
           onPress={() => this.onMarkerPress(marker.coordinate)}
         >
-          <Image source={require("../../shared/assets/marker.png")} />
+          <Image source={require("../../shared/assets/marker_red.png")} />
         </Marker>
       );
     });

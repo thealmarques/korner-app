@@ -7,7 +7,7 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import ButtonComponent from "../submit-button/button";
-import { TouchableHighlight } from "react-native-gesture-handler";
+import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 interface Props {
   onPress: any;
@@ -15,82 +15,47 @@ interface Props {
 }
 
 export default class CreateEventComponent extends React.Component<Props> {
-  state = {
-    loaded: true,
-    selected: 1
-  };
-
-  getSelectedStyle(option: number) {
-      if (option === this.state.selected) {
-          return styles.selected;
-      }
-      return styles.notSelected;
-  }
+  state = {};
 
   render() {
     return (
-      this.state.loaded && (
-        <View style={styles.container}>
-          <Icon
-            style={styles.icon}
-            name="close"
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+          <Image
+            style={styles.image}
+            source={require("../../assets/city.png")}
+          ></Image>
+          <TouchableWithoutFeedback style={styles.iconContainer}
             onPress={() => this.props.onClose()}
-          />
-          <TouchableHighlight
-            onPress={() =>
-              this.setState({
-                selected: 1
-              })
-            }
-            underlayColor='white'
-            activeOpacity={1}
           >
-            <View style={[styles.item, this.getSelectedStyle(1)]}>
-              <Image
-                style={styles.image}
-                source={require("../../assets/idea.png")}
-              ></Image>
-              {
-                <View style={styles.textWrapper}>
-                  <Text style={styles.title}>Suggest</Text>
-                  <Text style={styles.subtitle}>
-                    If you feel the need for a new local business
-                  </Text>
-                </View>
-              }
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight
-            onPress={() =>
-              this.setState({
-                selected: 2
-              })
-            }
-            underlayColor='white'
-            activeOpacity={1}
-          >
-            <View style={[styles.item, this.getSelectedStyle(2)]}>
-              <Image
-                style={styles.image}
-                source={require("../../assets/open.png")}
-              ></Image>
-              {
-                <View style={styles.textWrapper}>
-                  <Text style={styles.title}>Open</Text>
-                  <Text style={styles.subtitle}>
-                    If you want to open a new business around
-                  </Text>
-                </View>
-              }
-            </View>
-          </TouchableHighlight>
-          <ButtonComponent
-            label="Continue"
-            callback={() => console.log("Oi")}
-            marginTop={hp("0%")}
-          ></ButtonComponent>
+            <Icon style={styles.icon} name="close" />
+          </TouchableWithoutFeedback>
         </View>
-      )
+        <TouchableHighlight
+          onPress={() => console.log("Suggest")}
+          underlayColor="white"
+          activeOpacity={0.3}
+        >
+          <View style={styles.item}>
+            <Text style={styles.title}>Suggest</Text>
+            <Text style={styles.subtitle}>
+              If you feel the need for a new local business
+            </Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={() => console.log("Open")}
+          underlayColor="white"
+          activeOpacity={0.3}
+        >
+          <View style={styles.item}>
+            <Text style={styles.title}>Open</Text>
+            <Text style={styles.subtitle}>
+              If you are to open a new business around.
+            </Text>
+          </View>
+        </TouchableHighlight>
+      </View>
     );
   }
 }
