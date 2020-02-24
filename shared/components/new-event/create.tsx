@@ -12,12 +12,14 @@ import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gestu
 interface Props {
   onPress: any;
   onClose: any;
+  navigation: any;
 }
 
 export default class CreateEventComponent extends React.Component<Props> {
   state = {};
 
   render() {
+    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.topContainer}>
@@ -32,7 +34,7 @@ export default class CreateEventComponent extends React.Component<Props> {
           </TouchableWithoutFeedback>
         </View>
         <TouchableHighlight
-          onPress={() => console.log("Suggest")}
+          onPress={() => navigate("Suggest")}
           underlayColor="white"
           activeOpacity={0.3}
         >

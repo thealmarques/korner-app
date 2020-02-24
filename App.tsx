@@ -14,6 +14,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import React, { Component } from "react";
 import { View, Text } from "native-base";
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
+import SuggestScreen from "./screens/suggest/suggest";
 
 const CustomDrawerComponent = props => {
   return (
@@ -47,6 +48,12 @@ const AppStack = createDrawerNavigator(
     },
     Intro: {
       screen: IntroPage
+    },
+    Suggest: {
+      screen: SuggestScreen,
+      navigationOptions: {
+        drawerLabel: () => null
+      }
     }
   },
   {

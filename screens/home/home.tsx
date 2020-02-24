@@ -57,9 +57,15 @@ export default class HomePage extends React.Component<Props> {
     });
 
     if (name.length > 0) {
-      this.setState({
-        locationName: name[0].city + "," + name[0].country
-      });
+      if (name[0].city === null) {
+        this.setState({
+          locationName: name[0].street + "," + name[0].country
+        });
+      } else {
+        this.setState({
+          locationName: name[0].city + "," + name[0].country
+        });
+      }
     } else {
       this.setState({
         locationName: "Define location"
@@ -96,7 +102,8 @@ export default class HomePage extends React.Component<Props> {
     if (this.state.showCreateEvent) {
       return (
         <CreateEventComponent onPress={() => console.log('Pressed')} 
-                              onClose={() => this.setState({ showCreateEvent: false })}>
+                              onClose={() => this.setState({ showCreateEvent: false })}
+                              navigation={this.props.navigation}>
         </CreateEventComponent>
       );
     }
