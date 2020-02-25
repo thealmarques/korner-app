@@ -124,7 +124,7 @@ export default class SuggestScreen extends React.Component<Props> {
               alignItems: "center",
               justifyContent: "space-evenly",
               height: wp("11%"),
-              width: wp("23%"),
+              width: wp("34%"),
               flexDirection: 'row'
             }}
             onPress={() => {

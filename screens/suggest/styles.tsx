@@ -19,10 +19,9 @@ export const styles = StyleSheet.create({
     scrollCategories: {
         marginTop: hp('1%'),
         flexDirection: 'row',
-        height: hp('15%')
+        height: hp('16%')
     },
     scrollSubCategories: {
-        marginTop: hp('0.5%'),
         flexDirection: 'column',
         height: hp('20%'),
     },
@@ -80,7 +79,7 @@ export const styles = StyleSheet.create({
     },
     miniSubCategoriesContainer: {
         backgroundColor : "white",
-        width: wp('24%'),
+        width: wp('34%'),
         height: wp('11%'),
         marginRight: wp('2%'),
         shadowColor: "#000",
@@ -95,7 +94,7 @@ export const styles = StyleSheet.create({
     miniSubCategoriesContainerSelected: {
         backgroundColor : "#EDEDED",
         marginRight: wp('2%'),
-        width: wp('24%'),
+        width: wp('34%'),
         height: wp('11%'),
         shadowColor: "#000",
         shadowOffset: {
