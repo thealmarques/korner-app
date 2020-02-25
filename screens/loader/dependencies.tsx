@@ -14,7 +14,13 @@ export default class DependenciesLoader extends React.Component<Navigation> {
     await Asset.loadAsync([
       require("../../shared/assets/edit.png"),
       require("../../shared/assets/city.png"),
-      require("../../shared/assets/marker_red.png")
+      require("../../shared/assets/marker_red.png"),
+      require('../../shared/assets/fork.png'),
+      require('../../shared/assets/video.png'),
+      require('../../shared/assets/barbershop.png'),
+      require('../../shared/assets/clinic.png'),
+      require('../../shared/assets/coffee-cup.png'),
+      require('../../shared/assets/beer.png')
     ])
     await Font.loadAsync({
       "quicksand-regular": require("../../shared/assets/fonts/Quicksand-Regular.ttf"),
