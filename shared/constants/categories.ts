@@ -45,13 +45,40 @@ export const categories = [
         id: '2',
         title: 'Healthcare',
         image: require('../../shared/assets/clinic.png'),
-        subcategories: []
+        subcategories: [
+            {
+                id: '1',
+                title: 'Restaurant',
+                image: require('../../shared/assets/food.png'),
+            },
+            {
+                id: '2',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '3',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            },
+        ]
     },
     {
         id: '3',
         title: 'Entertainment',
         image: require('../../shared/assets/video.png'),
-        subcategories: []
+        subcategories: [
+            {
+                id: '1',
+                title: 'Restaurant',
+                image: require('../../shared/assets/food.png'),
+            },
+            {
+                id: '2',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            }
+        ]
     },
     {
         id: '4',

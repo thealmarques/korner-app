@@ -18,10 +18,17 @@ interface Props {
 }
 
 export default class SuggestScreen extends React.Component<Props> {
+  scrollViewRef = null;
   state = {
     selectedCategory: '1',
     selectedSubCategory: '1'
   }
+
+  constructor(props) {
+    super(props);
+    this.scrollViewRef = React.createRef();
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.screen}>
@@ -43,6 +50,7 @@ export default class SuggestScreen extends React.Component<Props> {
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ padding: wp("4%") }}
+              ref={this.scrollViewRef}
             >
               <View style={{flexWrap: 'wrap', justifyContent: 'space-between'}}>
                 {this.renderSubCategories()}
@@ -69,8 +77,10 @@ export default class SuggestScreen extends React.Component<Props> {
             }}
             onPress={() => {
               this.setState({
-                selectedCategory: category.id
-              })
+                selectedCategory: category.id,
+                selectedSubCategory: '1'
+              });
+              this.scrollViewRef.current.scrollTo({ animated: false, x: 0, y: 0 });
             }}
           >
             <Image
