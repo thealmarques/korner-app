@@ -23,7 +23,7 @@ class Header extends React.Component<Props> {
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: hp("4%"),
+    paddingTop: hp("3%"),
     backgroundColor: "#C92C41",
     height: hp("11%"),
     flexDirection: "row",
