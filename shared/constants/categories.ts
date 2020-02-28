@@ -85,10 +85,52 @@ export const categories = [
         title: 'Aesthetics',
         image: require('../../shared/assets/barbershop.png'),
         subcategories: []
-    },{
+    },
+    {
         id: '5',
-        title: 'Vehicles',
-        image: require('../../shared/assets/fork.png'),
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
+        subcategories: []
+    },
+    {
+        id: '6',
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
+        subcategories: []
+    },
+    {
+        id: '7',
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
+        subcategories: []
+    },
+    {
+        id: '8',
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
+        subcategories: []
+    },{
+        id: '8',
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
+        subcategories: []
+    },
+    {
+        id: '10',
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
+        subcategories: []
+    },
+    {
+        id: '11',
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
+        subcategories: []
+    },
+    {
+        id: '12',
+        title: 'Aesthetics',
+        image: require('../../shared/assets/barbershop.png'),
         subcategories: []
     }
 ];

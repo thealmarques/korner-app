@@ -4,16 +4,13 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   TextInput,
-  Switch
+  Switch,
+  FlatList
 } from "react-native-gesture-handler";
 import { styles } from "./styles";
-import { SafeAreaView, Image } from "react-native";
+import { SafeAreaView, Image, Dimensions } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
 import Slider from "react-native-slider";
 
 interface Props {
@@ -41,32 +38,31 @@ export default class SuggestScreen extends React.Component<Props> {
       <SafeAreaView style={styles.screen}>
         <ScrollView>
           <Header locationName={""} navigation={this.props.navigation}></Header>
-          <View style={styles.container}>
-            <Text style={styles.text}>Choose a category & subcategory</Text>
-            <View style={styles.scrollCategories}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ padding: wp("1%") }}
-              >
-                {this.renderCategories()}
-              </ScrollView>
-            </View>
-            <View style={styles.scrollSubCategories}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ padding: wp("1%") }}
-                ref={this.scrollViewRef}
-              >
-                <View
-                  style={{ flexWrap: "wrap", justifyContent: "space-between" }}
-                >
-                  {this.renderSubCategories()}
-                </View>
-              </ScrollView>
-            </View>
-            <Text
+          <Text style={styles.text}>Choose a category & subcategory</Text>
+          <FlatList
+            horizontal
+            initialNumToRender={categories.length}
+            style={styles.scrollView}
+            showsHorizontalScrollIndicator={false}
+            data={categories}
+            renderItem={({ item, index }) => this.renderCategories(item)}
+            keyExtractor={(item, index) => index.toString()}
+          ></FlatList>
+          {/* <View style={styles.scrollSubCategories}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.scrollViewPadding}
+              ref={this.scrollViewRef}
+            >
+              <View style={styles.categoriesByColumn}>
+                {
+                  //this.renderSubCategories()
+                }
+              </View>
+            </ScrollView>
+          </View> */}
+          {/* <Text
               style={[
                 styles.text,
                 {
@@ -192,52 +188,44 @@ export default class SuggestScreen extends React.Component<Props> {
                   flexWrap: "wrap"
                 }}
               ></Text>
-            </View>
-          </View>
+            </View> */}
         </ScrollView>
       </SafeAreaView>
     );
   }
 
-  renderCategories() {
-    return categories.map(category => {
-      return (
-        <View
-          key={category.id}
-          style={
-            this.state.selectedCategory !== category.id
-              ? styles.categoriesContainer
-              : styles.categoriesContainerSelected
-          }
+  renderCategories(category) {
+    return (
+      <View
+        key={category.id}
+        style={[
+          styles.categoriesContainer,
+          styles.shadow,
+          this.state.selectedCategory === category.id ? styles.selected : ""
+        ]}
+      >
+        <TouchableWithoutFeedback
+          style={styles.touchable}
+          onPress={() => {
+            this.setState({
+              selectedCategory: category.id,
+              selectedSubCategory: "1"
+            });
+            /*this.scrollViewRef.current.scrollTo({
+              animated: false,
+              x: 0,
+              y: 0
+            });*/
+          }}
         >
-          <TouchableWithoutFeedback
-            style={{
-              paddingHorizontal: wp("4%"),
-              alignItems: "center",
-              justifyContent: "center",
-              height: wp("21%"),
-              width: wp("23%")
-            }}
-            onPress={() => {
-              this.setState({
-                selectedCategory: category.id,
-                selectedSubCategory: "1"
-              });
-              this.scrollViewRef.current.scrollTo({
-                animated: false,
-                x: 0,
-                y: 0
-              });
-            }}
-          >
-            <Image style={styles.image} source={category.image}></Image>
-            <Text style={styles.subText}>{category.title}</Text>
-          </TouchableWithoutFeedback>
-        </View>
-      );
-    });
+          <Image style={styles.image} source={category.image}></Image>
+          <Text style={styles.subText}>{category.title}</Text>
+        </TouchableWithoutFeedback>
+      </View>
+    );
   }
 
+  /*
   renderSubCategories() {
     const subcategories =
       categories[parseInt(this.state.selectedCategory, 10) - 1].subcategories;
@@ -287,7 +275,7 @@ export default class SuggestScreen extends React.Component<Props> {
               alignItems: "center",
               justifyContent: "space-evenly",
               flexDirection: "row",
-              height: wp("8.5%"),
+              height: wp("9%"),
               width: wp("34%")
             }}
             onPress={() => {
@@ -302,5 +290,5 @@ export default class SuggestScreen extends React.Component<Props> {
         </View>
       );
     });
-  }
+  }*/
 }

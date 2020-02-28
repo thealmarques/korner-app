@@ -1,40 +1,50 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-export const styles = StyleSheet.create({
+//we define rem equals to the entireScreenWidth / 380
+const entireScreenWidth = Dimensions.get('window').width;
+EStyleSheet.build({$rem: entireScreenWidth / 380});
+
+export const styles = EStyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "white"
-  },
-  container: {
-    flex: 1,
-    marginTop: hp("1%")
+    backgroundColor: "white",
   },
   text: {
-    paddingHorizontal: wp("4%"),
+    paddingHorizontal: '10rem',
     fontFamily: "quicksand-bold",
     color: "#3A4750",
-    fontSize: wp("4%")
+    fontSize: '14rem',
+    marginTop: '10rem'
   },
-  scrollCategories: {
-    flexDirection: "row",
-    height: hp("16%"),
-    marginLeft: wp('2%'),
-    marginTop: hp('1%')
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: '5rem',
+    marginTop: '5rem'
+  },
+  scrollViewPadding: {
+    padding: '10rem',
   },
   scrollSubCategories: {
     flexDirection: "column",
     height: hp("15%"),
-    marginLeft: wp('2%')
+    marginLeft: '10rem'
+  },
+  touchable: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   categoriesContainer: {
     backgroundColor: "white",
-    width: wp("23%"),
-    height: wp("21%"),
-    marginRight: wp("2%"),
+    margin: '5rem',
+    width: '85rem',
+    paddingVertical: '10rem'
+  },
+  shadow: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -44,19 +54,12 @@ export const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
   },
-  categoriesContainerSelected: {
-    backgroundColor: "#EDEDED",
-    width: wp("23%"),
-    height: wp("21%"),
-    marginRight: wp("2%"),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+  selected: {
+    backgroundColor: "#EDEDED"
+  },
+  categoriesByColumn: {
+    flexWrap: "wrap",
+    justifyContent: "space-between"
   },
   subCategoriesContainer: {
     height: wp("23%"),
@@ -103,7 +106,7 @@ export const styles = StyleSheet.create({
   miniSubCategoriesContainerSelected: {
     backgroundColor: "#EDEDED",
     marginRight: wp("2%"),
-    height: wp("8.5%"),
+    height: wp("9%"),
     width: wp("34%"),
     shadowColor: "#000",
     shadowOffset: {
@@ -115,8 +118,8 @@ export const styles = StyleSheet.create({
     elevation: 5
   },
   image: {
-    width: wp("8.5%"),
-    height: hp("8.5%"),
+    width: '28rem',
+    height: '40rem',
     resizeMode: "contain"
   },
   smallImage: {
