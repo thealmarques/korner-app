@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "native-base";
+import { View, Text, StyleProvider } from "native-base";
 import {
   ScrollView,
   TouchableWithoutFeedback,
@@ -48,20 +48,29 @@ export default class SuggestScreen extends React.Component<Props> {
             renderItem={({ item, index }) => this.renderCategories(item)}
             keyExtractor={(item, index) => index.toString()}
           ></FlatList>
-          {/* <View style={styles.scrollSubCategories}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.scrollViewPadding}
-              ref={this.scrollViewRef}
-            >
-              <View style={styles.categoriesByColumn}>
-                {
-                  //this.renderSubCategories()
-                }
-              </View>
-            </ScrollView>
-          </View> */}
+          <ScrollView
+            horizontal
+            style={[styles.scrollView]}
+            showsHorizontalScrollIndicator={false}
+            ref={this.scrollViewRef}
+          >
+            <View style={styles.byColumn}>
+              {this.renderSubCategories()}
+            </View>
+          </ScrollView>
+
+          {/* <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollViewPadding}
+            ref={this.scrollViewRef}
+          >
+            <View style={styles.categoriesByColumn}>
+              {
+                //this.renderSubCategories()
+              }
+            </View>
+          </ScrollView> */}
           {/* <Text
               style={[
                 styles.text,
@@ -205,17 +214,17 @@ export default class SuggestScreen extends React.Component<Props> {
         ]}
       >
         <TouchableWithoutFeedback
-          style={styles.touchable}
+          style={styles.touchableCategory}
           onPress={() => {
             this.setState({
               selectedCategory: category.id,
               selectedSubCategory: "1"
             });
-            /*this.scrollViewRef.current.scrollTo({
+            this.scrollViewRef.current.scrollTo({
               animated: false,
               x: 0,
               y: 0
-            });*/
+            });
           }}
         >
           <Image style={styles.image} source={category.image}></Image>
@@ -225,70 +234,60 @@ export default class SuggestScreen extends React.Component<Props> {
     );
   }
 
-  /*
   renderSubCategories() {
     const subcategories =
       categories[parseInt(this.state.selectedCategory, 10) - 1].subcategories;
-    return subcategories.map(sub => {
-      if (sub.id === "1") {
+    return subcategories.map(subcategory => {
+      if (subcategory.id === "1") {
         return (
           <View
-            key={sub.id}
-            style={
-              this.state.selectedSubCategory !== sub.id
-                ? styles.subCategoriesContainer
-                : styles.subCategoriesContainerSelected
-            }
+            key={subcategory.id}
+            style={[
+              styles.mainSubCategoryContainer,
+              this.state.selectedSubCategory === subcategory.id
+                ? styles.selected
+                : "",
+              styles.shadow
+            ]}
           >
             <TouchableWithoutFeedback
-              style={{
-                paddingHorizontal: wp("4%"),
-                alignItems: "center",
-                justifyContent: "center",
-                height: wp("23%"),
-                width: wp("21%"),
-              }}
+              style={styles.touchableSubCategory}
               onPress={() => {
                 this.setState({
-                  selectedSubCategory: sub.id
+                  selectedSubCategory: subcategory.id
                 });
               }}
             >
-              <Image style={styles.image} source={sub.image}></Image>
-              <Text style={styles.subText}>{sub.title}</Text>
+              <Image style={styles.image} source={subcategory.image}></Image>
+              <Text style={styles.subText}>{subcategory.title}</Text>
             </TouchableWithoutFeedback>
           </View>
         );
       }
       return (
         <View
-          key={sub.id}
+          key={subcategory.id}
           style={[
-            this.state.selectedSubCategory !== sub.id
-              ? styles.miniSubCategoriesContainer
-              : styles.miniSubCategoriesContainerSelected
+            styles.miniSubCategoryContainer,
+            styles.shadow,
+            this.state.selectedSubCategory === subcategory.id
+              ? styles.selected
+              : ""
           ]}
         >
           <TouchableWithoutFeedback
-            style={{
-              paddingHorizontal: wp("4%"),
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              flexDirection: "row",
-              height: wp("9%"),
-              width: wp("34%")
-            }}
+            style={[styles.touchableMiniCategory, styles.row]}
             onPress={() => {
               this.setState({
-                selectedSubCategory: sub.id
+                selectedSubCategory: subcategory.id
               });
             }}
           >
-            <Image style={styles.smallImage} source={sub.image}></Image>
-            <Text style={styles.subText}>{sub.title}</Text>
+            <Image style={styles.smallImage} source={subcategory.image}></Image>
+            <Text style={styles.subText}>{subcategory.title}</Text>
           </TouchableWithoutFeedback>
         </View>
       );
     });
-  }*/
+  }
 }

@@ -26,23 +26,31 @@ export const styles = EStyleSheet.create({
     paddingHorizontal: '5rem',
     marginTop: '5rem'
   },
-  scrollViewPadding: {
-    padding: '10rem',
-  },
   scrollSubCategories: {
     flexDirection: "column",
     height: hp("15%"),
     marginLeft: '10rem'
   },
-  touchable: {
+  touchableCategory: {
     alignItems: "center",
     justifyContent: "center",
+    height: '70rem'
+  },
+  touchableSubCategory: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: '75rem'
+  },
+  touchableMiniCategory: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: '32rem'
   },
   categoriesContainer: {
     backgroundColor: "white",
     margin: '5rem',
     width: '85rem',
-    paddingVertical: '10rem'
+    height: '70rem'
   },
   shadow: {
     shadowColor: "#000",
@@ -57,65 +65,29 @@ export const styles = EStyleSheet.create({
   selected: {
     backgroundColor: "#EDEDED"
   },
-  categoriesByColumn: {
-    flexWrap: "wrap",
-    justifyContent: "space-between"
+  byColumn: {
+    flex: 1,
+    flexDirection : "column",
+    flexWrap: 'wrap',
+    height: '90rem',
   },
-  subCategoriesContainer: {
-    height: wp("23%"),
-    width: wp("21%"),
+  mainSubCategoryContainer: {
     backgroundColor: "white",
-    marginRight: wp("2%"),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+    margin: '5rem',
+    width: '85rem',
+    height: '75rem',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  subCategoriesContainerSelected: {
-    height: wp("23%"),
-    width: wp("21%"),
-    backgroundColor: "#EDEDED",
-    marginRight: wp("2%"),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
-  miniSubCategoriesContainer: {
+  miniSubCategoryContainer: {
     backgroundColor: "white",
-    marginRight: wp("2%"),
-    height: wp("8.5%"),
-    width: wp("34%"),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+    margin: '5rem',
+    width: '100rem',
+    height: '32rem',
   },
-  miniSubCategoriesContainerSelected: {
-    backgroundColor: "#EDEDED",
-    marginRight: wp("2%"),
-    height: wp("9%"),
-    width: wp("34%"),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
   },
   image: {
     width: '28rem',
@@ -123,14 +95,14 @@ export const styles = EStyleSheet.create({
     resizeMode: "contain"
   },
   smallImage: {
-    width: wp("4.5%"),
-    height: hp("4.5%"),
+    width: '14rem',
+    height: '20rem',
     resizeMode: "contain"
   },
   subText: {
     fontFamily: "quicksand-bold",
     color: "#3A4750",
-    fontSize: wp("2%")
+    fontSize: '8rem'
   },
   textInput: {
     justifyContent: "flex-start",
