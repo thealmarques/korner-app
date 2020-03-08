@@ -91,6 +91,7 @@ export default class HomePage extends React.Component<Props> {
         <Header
           locationName={this.state.locationName}
           navigation={this.props.navigation}
+          command=''
         ></Header>
         {this.showMap()}
         {this.showCreateEvent()}

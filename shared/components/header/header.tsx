@@ -1,12 +1,15 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import DrawerTrigger from "../drawer/drawerTrigger";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import LocationComponent from "../location/location";
+import { Text } from "native-base";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { styles } from "./styles";
 
 interface Props {
   navigation: any;
   locationName: string;
+  command: string;
 }
 
 class Header extends React.Component<Props> {
@@ -14,22 +17,36 @@ class Header extends React.Component<Props> {
     return (
       <View style={styles.header}>
         <DrawerTrigger navigation={this.props.navigation}></DrawerTrigger>
-        <LocationComponent locationName={this.props.locationName} 
-          navigation={this.props.navigation}></LocationComponent>
+        {this.getLocationName()}
+        {this.getCommands()}
       </View>
     );
   }
-}
 
-const styles = StyleSheet.create({
-  header: {
-    paddingTop: hp("3%"),
-    backgroundColor: "#C92C41",
-    height: hp("11%"),
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+  getLocationName() {
+    if (this.props.locationName !== "") {
+      return (
+        <LocationComponent
+          locationName={this.props.locationName}
+          navigation={this.props.navigation}
+        ></LocationComponent>
+      );
+    }
   }
-});
+
+  getCommands() {
+    if (this.props.command !== "") {
+      return (
+        <TouchableOpacity
+          onPress={() => alert("To create")}
+        >
+          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
+            {this.props.command}
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+  }
+}
 
 export default Header;

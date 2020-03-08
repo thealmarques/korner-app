@@ -1,56 +1,47 @@
-import { StyleSheet, Dimensions } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
-import EStyleSheet from 'react-native-extended-stylesheet';
+import { Dimensions } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 
 //we define rem equals to the entireScreenWidth / 380
-const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({$rem: entireScreenWidth / 380});
+const entireScreenWidth = Dimensions.get("window").width;
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 
 export const styles = EStyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "white"
   },
   text: {
-    paddingHorizontal: '10rem',
+    paddingHorizontal: "10rem",
     fontFamily: "quicksand-bold",
     color: "#3A4750",
-    fontSize: '14rem',
-    marginTop: '10rem'
+    fontSize: "14rem",
+    marginTop: "10rem"
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: '5rem',
-    marginTop: '5rem'
-  },
-  scrollSubCategories: {
-    flexDirection: "column",
-    height: hp("15%"),
-    marginLeft: '10rem'
+    paddingHorizontal: "5rem",
+    marginTop: "10rem"
   },
   touchableCategory: {
     alignItems: "center",
     justifyContent: "center",
-    height: '70rem'
+    height: "80rem"
   },
   touchableSubCategory: {
     alignItems: "center",
     justifyContent: "center",
-    height: '75rem'
+    height: "80rem"
   },
   touchableMiniCategory: {
     alignItems: "center",
     justifyContent: "center",
-    height: '32rem'
+    height: "34.5rem"
   },
   categoriesContainer: {
     backgroundColor: "white",
-    margin: '5rem',
-    width: '85rem',
-    height: '70rem'
+    margin: "5rem",
+    width: "85rem",
+    height: "80rem"
   },
   shadow: {
     shadowColor: "#000",
@@ -62,67 +53,107 @@ export const styles = EStyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5
   },
+  shadowLight: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 1.84,
+    elevation: 2
+  },
   selected: {
     backgroundColor: "#EDEDED"
   },
   byColumn: {
     flex: 1,
-    flexDirection : "column",
-    flexWrap: 'wrap',
-    height: '90rem',
+    flexDirection: "column",
+    flexWrap: "wrap",
+    height: "90rem"
   },
   mainSubCategoryContainer: {
     backgroundColor: "white",
-    margin: '5rem',
-    width: '85rem',
-    height: '75rem',
-    justifyContent: 'center',
-    alignItems: 'center'
+    margin: "5rem",
+    width: "85rem",
+    height: "80rem",
+    justifyContent: "center",
+    alignItems: "center"
   },
   miniSubCategoryContainer: {
     backgroundColor: "white",
-    margin: '5rem',
-    width: '100rem',
-    height: '32rem',
+    margin: "5rem",
+    width: "140rem",
+    height: "34.5rem"
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    flexDirection: "row",
+    justifyContent: "space-evenly"
   },
   image: {
-    width: '28rem',
-    height: '40rem',
+    width: "28rem",
+    height: "40rem",
     resizeMode: "contain"
   },
   smallImage: {
-    width: '14rem',
-    height: '20rem',
+    width: "14rem",
+    height: "20rem",
     resizeMode: "contain"
   },
   subText: {
     fontFamily: "quicksand-bold",
     color: "#3A4750",
-    fontSize: '8rem'
+    fontSize: "8rem"
   },
   textInput: {
     justifyContent: "flex-start",
-    fontSize: wp("2.7%"),
-    paddingHorizontal: wp("2%"),
+    fontSize: "12rem",
+    paddingHorizontal: "5rem",
     fontFamily: "quicksand-regular"
   },
   shadowTextInput: {
-    marginTop: hp("2%"),
-    marginHorizontal: wp("4%"),
+    margin: "10rem",
+    paddingHorizontal: "5rem",
     backgroundColor: "white",
-    height: wp("12%"),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-
-    elevation: 2
+    height: "45rem"
+  },
+  marginTop: {
+    marginTop: "5rem"
+  },
+  marginBottom: {
+    marginBottom: "6rem"
+  },
+  setupContainer: {
+    marginTop: "5rem",
+    flex: 1
+  },
+  innerSetupView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: "10rem"
+  },
+  innerSetupText: {
+    color: "#B0B4B7",
+    fontFamily: "quicksand-regular",
+    fontSize: "14rem",
+    width: "75%"
+  },
+  sliderView: {
+    flex: 1,
+    alignItems: "stretch",
+    justifyContent: "center",
+    marginTop: "5rem",
+    marginHorizontal: "10rem"
+  },
+  slider: {
+    backgroundColor: "#508B69",
+    width: '15rem',
+    height: '15rem'
+  },
+  sliderText: {
+    color: "#B0B4B7",
+    fontFamily: "quicksand-regular",
+    fontSize: "14rem",
+    flexWrap: "wrap"
   }
 });

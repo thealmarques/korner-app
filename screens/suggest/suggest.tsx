@@ -1,14 +1,13 @@
 import React from "react";
-import { View, Text, StyleProvider } from "native-base";
+import { View, Text, Switch } from "native-base";
 import {
   ScrollView,
   TouchableWithoutFeedback,
   TextInput,
-  Switch,
   FlatList
 } from "react-native-gesture-handler";
 import { styles } from "./styles";
-import { SafeAreaView, Image, Dimensions } from "react-native";
+import { SafeAreaView, Image } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import Slider from "react-native-slider";
@@ -37,7 +36,7 @@ export default class SuggestScreen extends React.Component<Props> {
     return (
       <SafeAreaView style={styles.screen}>
         <ScrollView>
-          <Header locationName={""} navigation={this.props.navigation}></Header>
+          <Header locationName="" navigation={this.props.navigation} command="Create"></Header>
           <Text style={styles.text}>Choose a category & subcategory</Text>
           <FlatList
             horizontal
@@ -54,150 +53,70 @@ export default class SuggestScreen extends React.Component<Props> {
             showsHorizontalScrollIndicator={false}
             ref={this.scrollViewRef}
           >
-            <View style={styles.byColumn}>
-              {this.renderSubCategories()}
-            </View>
+            <View style={styles.byColumn}>{this.renderSubCategories()}</View>
           </ScrollView>
-
-          {/* <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.scrollViewPadding}
-            ref={this.scrollViewRef}
-          >
-            <View style={styles.categoriesByColumn}>
-              {
-                //this.renderSubCategories()
+          <Text style={[styles.marginTop, styles.text, styles.marginBottom]}>Description</Text>
+          <View style={[styles.shadowTextInput, styles.shadowLight]}>
+            <TextInput
+              style={[styles.textInput]}
+              value={this.state.description}
+              onChangeText={text =>
+                this.setState({
+                  description: text
+                })
               }
-            </View>
-          </ScrollView> */}
-          {/* <Text
-              style={[
-                styles.text,
-                {
-                  marginTop: hp("1%")
-                }
-              ]}
-            >
-              Description
-            </Text>
-            <View style={styles.shadowTextInput}>
-              <TextInput
-                style={[styles.textInput]}
-                value={this.state.description}
-                onChangeText={text =>
+              placeholder="What type of service you want ?"
+            ></TextInput>
+          </View>
+          <Text style={[styles.text, styles.marginTop, styles.marginBottom]}>
+            Setup Notifications
+          </Text>
+          <View style={styles.setupContainer}>
+            <View style={styles.innerSetupView}>
+              <Text style={[styles.innerSetupText, styles.marginTop, styles.marginBottom]}>Notify Upvotes</Text>
+              <Switch
+                trackColor={{ true: "#69C38F", false: "#B0B4B7" }}
+                thumbColor={"#508B69"}
+                onValueChange={value => {
                   this.setState({
-                    description: text
-                  })
-                }
-                placeholder="What type of service you want ?"
-              ></TextInput>
-            </View>
-            <Text
-              style={[
-                styles.text,
-                {
-                  marginTop: hp("3%")
-                }
-              ]}
-            >
-              Setup Notifications
-            </Text>
-            <View
-              style={{
-                marginTop: hp("2%"),
-                flex: 1
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginHorizontal: wp("4%")
+                    notifyUpvotes: value
+                  });
                 }}
-              >
-                <Text
-                  style={{
-                    color: "#B0B4B7",
-                    fontFamily: "quicksand-regular",
-                    fontSize: wp("4%")
-                  }}
-                >
-                  Notify Upvotes
-                </Text>
-                <Switch
-                  trackColor={{ true: "#69C38F", false: "#B0B4B7" }}
-                  thumbColor={"#508B69"}
-                  onValueChange={value => {
-                    this.setState({
-                      notifyUpvotes: value
-                    });
-                  }}
-                  value={this.state.notifyUpvotes}
-                ></Switch>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginHorizontal: wp("4%"),
-                  marginTop: hp("2%")
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#B0B4B7",
-                    fontFamily: "quicksand-regular",
-                    fontSize: wp("4%"),
-                    width: wp("75%"),
-                    flexWrap: "wrap"
-                  }}
-                >
-                  Notify if a new local business is created within range (
-                  {Number(this.state.distance).toFixed(0)}m)
-                </Text>
-                <Switch
-                  trackColor={{ true: "#69C38F", false: "#B0B4B7" }}
-                  thumbColor={"#508B69"}
-                  onValueChange={value => {
-                    this.setState({
-                      notifyCreated: value
-                    });
-                  }}
-                  value={this.state.notifyCreated}
-                ></Switch>
-              </View>
+                value={this.state.notifyUpvotes}
+              ></Switch>
             </View>
-            <View
-              style={{
-                flex: 1,
-                alignItems: "stretch",
-                justifyContent: "center",
-                marginTop: hp("3.5%"),
-                marginHorizontal: wp("4%")
-              }}
+            <View style={[styles.innerSetupView, styles.marginTop]}>
+              <Text style={[styles.innerSetupText, styles.marginTop]}>
+                Notify if a new local business is created within range (
+                {Number(this.state.distance).toFixed(0)}m)
+              </Text>
+              <Switch
+                trackColor={{ true: "#69C38F", false: "#B0B4B7" }}
+                thumbColor={"#508B69"}
+                onValueChange={value => {
+                  this.setState({
+                    notifyCreated: value
+                  });
+                }}
+                value={this.state.notifyCreated}
+              ></Switch>
+            </View>
+          </View>
+          <View
+              style={[styles.sliderView, styles.marginTop]}
             >
               <Slider
                 minimumTrackTintColor="#508B69"
-                thumbStyle={{
-                  backgroundColor: "#508B69",
-                  width: wp("3.5%"),
-                  height: wp("3.5%")
-                }}
+                thumbStyle={styles.slider}
                 minimumValue={500}
                 maximumValue={2000}
                 value={this.state.distance}
                 onValueChange={value => this.setState({ distance: value })}
               />
               <Text
-                style={{
-                  color: "#B0B4B7",
-                  fontFamily: "quicksand-regular",
-                  fontSize: wp("4%"),
-                  flexWrap: "wrap"
-                }}
+                style={styles.sliderText}
               ></Text>
-            </View> */}
+            </View>
         </ScrollView>
       </SafeAreaView>
     );
