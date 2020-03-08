@@ -19,7 +19,8 @@ export default class HomePage extends React.Component<Props> {
     latitudeDelta: 0,
     longitudeDelta: 0,
     markers: [],
-    showCreateEvent: false
+    showCreateEvent: false,
+    clickedLocation: null
   };
 
   private async getLocation() {
@@ -91,7 +92,7 @@ export default class HomePage extends React.Component<Props> {
         <Header
           locationName={this.state.locationName}
           navigation={this.props.navigation}
-          command=''
+          command={undefined}
         ></Header>
         {this.showMap()}
         {this.showCreateEvent()}
@@ -104,7 +105,8 @@ export default class HomePage extends React.Component<Props> {
       return (
         <CreateEventComponent onPress={() => console.log('Pressed')} 
                               onClose={() => this.setState({ showCreateEvent: false })}
-                              navigation={this.props.navigation}>
+                              navigation={this.props.navigation}
+                              location={this.state.clickedLocation}>
         </CreateEventComponent>
       );
     }
@@ -159,7 +161,7 @@ export default class HomePage extends React.Component<Props> {
   }
 
   onMapPress(location: MapEvent) {
-    this.setState({ showCreateEvent: true })
+    this.setState({ showCreateEvent: true, clickedLocation: location.nativeEvent.coordinate })
     /*
     this.setState({
       markers: this.state.markers.concat({

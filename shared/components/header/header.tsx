@@ -9,7 +9,7 @@ import { styles } from "./styles";
 interface Props {
   navigation: any;
   locationName: string;
-  command: string;
+  command: any;
 }
 
 class Header extends React.Component<Props> {
@@ -35,13 +35,13 @@ class Header extends React.Component<Props> {
   }
 
   getCommands() {
-    if (this.props.command !== "") {
+    if (this.props.command) {
       return (
         <TouchableOpacity
-          onPress={() => alert("To create")}
+          onPress={() => this.props.command.callback()}
         >
           <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
-            {this.props.command}
+            {this.props.command.title}
           </Text>
         </TouchableOpacity>
       );

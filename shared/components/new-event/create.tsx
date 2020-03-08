@@ -2,17 +2,13 @@ import React from "react";
 import { styles } from "./styles";
 import { View, Text, Image } from "react-native";
 import { Icon } from "native-base";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
-import ButtonComponent from "../submit-button/button";
 import { TouchableHighlight, TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 interface Props {
   onPress: any;
   onClose: any;
   navigation: any;
+  location: any;
 }
 
 export default class CreateEventComponent extends React.Component<Props> {
@@ -34,7 +30,7 @@ export default class CreateEventComponent extends React.Component<Props> {
           </TouchableWithoutFeedback>
         </View>
         <TouchableHighlight
-          onPress={() => navigate("Suggest")}
+          onPress={() => navigate("Suggest", {location: this.props.location})}
           underlayColor="white"
           activeOpacity={0.3}
         >

@@ -24,8 +24,15 @@ export default class SuggestScreen extends React.Component<Props> {
     description: "",
     notifyUpvotes: true,
     notifyCreated: true,
-    distance: 1000
+    distance: 1000,
+    location: this.props.navigation.state.params.location
   };
+  create = {
+    title: 'Create',
+    callback: () => {
+      alert('Soon..');
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -36,7 +43,7 @@ export default class SuggestScreen extends React.Component<Props> {
     return (
       <SafeAreaView style={styles.screen}>
         <ScrollView>
-          <Header locationName="" navigation={this.props.navigation} command="Create"></Header>
+          <Header locationName="" navigation={this.props.navigation} command={this.create}></Header>
           <Text style={styles.text}>Choose a category & subcategory</Text>
           <FlatList
             horizontal
@@ -75,8 +82,8 @@ export default class SuggestScreen extends React.Component<Props> {
             <View style={styles.innerSetupView}>
               <Text style={[styles.innerSetupText, styles.marginTop, styles.marginBottom]}>Notify Upvotes</Text>
               <Switch
-                trackColor={{ true: "#69C38F", false: "#B0B4B7" }}
-                thumbColor={"#508B69"}
+                trackColor={{ true: "#64BF48", false: "#B0B4B7" }}
+                thumbColor={"#67AB53"}
                 onValueChange={value => {
                   this.setState({
                     notifyUpvotes: value
@@ -91,8 +98,8 @@ export default class SuggestScreen extends React.Component<Props> {
                 {Number(this.state.distance).toFixed(0)}m)
               </Text>
               <Switch
-                trackColor={{ true: "#69C38F", false: "#B0B4B7" }}
-                thumbColor={"#508B69"}
+                trackColor={{ true: "#64BF48", false: "#B0B4B7" }}
+                thumbColor={"#67AB53"}
                 onValueChange={value => {
                   this.setState({
                     notifyCreated: value
