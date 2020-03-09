@@ -23,6 +23,16 @@ export default class HomePage extends React.Component<Props> {
     clickedLocation: null
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.navigation.state.params.event === "create") {
+      this.setState({
+        showCreateEvent: false,
+        clickedLocation: null
+      });
+      this.fetchMarkers();
+    }
+  }
+
   private async getLocation() {
     const response: any = await Permissions.askAsync(Permissions.LOCATION);
     if (response.granted !== "granted" && response.granted) {
@@ -75,7 +85,6 @@ export default class HomePage extends React.Component<Props> {
   }
 
   async componentWillMount() {
-    YellowBox.ignoreWarnings(["Setting a timer"]);
     AsyncStorage.removeItem("LOCATION");
     const location = await this.readLocation();
     if (location !== null) {
@@ -103,11 +112,12 @@ export default class HomePage extends React.Component<Props> {
   showCreateEvent() {
     if (this.state.showCreateEvent) {
       return (
-        <CreateEventComponent onPress={() => console.log('Pressed')} 
-                              onClose={() => this.setState({ showCreateEvent: false })}
-                              navigation={this.props.navigation}
-                              location={this.state.clickedLocation}>
-        </CreateEventComponent>
+        <CreateEventComponent
+          onPress={() => console.log("Pressed")}
+          onClose={() => this.setState({ showCreateEvent: false })}
+          navigation={this.props.navigation}
+          location={this.state.clickedLocation}
+        ></CreateEventComponent>
       );
     }
   }
@@ -161,39 +171,33 @@ export default class HomePage extends React.Component<Props> {
   }
 
   onMapPress(location: MapEvent) {
-    this.setState({ showCreateEvent: true, clickedLocation: location.nativeEvent.coordinate })
-    /*
     this.setState({
-      markers: this.state.markers.concat({
-        coordinate: {
-          latitude: Number(location.nativeEvent.coordinate.latitude),
-          longitude: Number(location.nativeEvent.coordinate.longitude)
-        }
-      })
-    });*/
+      showCreateEvent: true,
+      clickedLocation: location.nativeEvent.coordinate
+    });
   }
 
-  onMarkerPress(location) {
-
-  }
+  onMarkerPress(location) {}
 
   onRegionChange(region: Region) {}
 
   async fetchMarkers() {
     var database = await firebase.firestore();
+    const markers = [];
     const ref = database
       .collection("suggestions")
       .get()
       .then(data => {
         data.docs.map(doc => {
-          this.setState({
-            markers: this.state.markers.concat({
-              coordinate: {
-                latitude: Number(doc.get("latitude")),
-                longitude: Number(doc.get("longitude"))
-              }
-            })
+          markers.push({
+            coordinate: {
+              latitude: Number(doc.get("latitude")),
+              longitude: Number(doc.get("longitude"))
+            }
           });
+        });
+        this.setState({
+          markers: this.state.markers.concat(markers)
         });
       });
   }

@@ -11,6 +11,7 @@ import { SafeAreaView, Image } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import Slider from "react-native-slider";
+import { saveMarker } from "../../shared/api/api";
 
 interface Props {
   navigation: any;
@@ -28,22 +29,51 @@ export default class SuggestScreen extends React.Component<Props> {
     location: this.props.navigation.state.params.location
   };
   create = {
-    title: 'Create',
+    title: "Create",
     callback: () => {
-      alert('Soon..');
+      saveMarker(
+        this.state.location.latitude,
+        this.state.location.longitude,
+        this.state.selectedCategory,
+        this.state.selectedSubCategory,
+        this.state.description,
+        this.state.notifyUpvotes,
+        this.state.notifyCreated,
+        this.state.distance
+      )
+        .then(value => {
+          this.props.navigation.navigate('Home', {
+            event: 'create'
+          });
+        })
+        .catch(error => {
+          alert(error.message);
+        });
     }
-  }
+  };
 
   constructor(props) {
     super(props);
     this.scrollViewRef = React.createRef();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.navigation.state.params.location) {
+      this.setState({
+        location: nextProps.navigation.state.params.location
+      });
+    }
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.screen}>
         <ScrollView>
-          <Header locationName="" navigation={this.props.navigation} command={this.create}></Header>
+          <Header
+            locationName=""
+            navigation={this.props.navigation}
+            command={this.create}
+          ></Header>
           <Text style={styles.text}>Choose a category & subcategory</Text>
           <FlatList
             horizontal
@@ -62,7 +92,9 @@ export default class SuggestScreen extends React.Component<Props> {
           >
             <View style={styles.byColumn}>{this.renderSubCategories()}</View>
           </ScrollView>
-          <Text style={[styles.marginTop, styles.text, styles.marginBottom]}>Description</Text>
+          <Text style={[styles.marginTop, styles.text, styles.marginBottom]}>
+            Description
+          </Text>
           <View style={[styles.shadowTextInput, styles.shadowLight]}>
             <TextInput
               style={[styles.textInput]}
@@ -80,7 +112,15 @@ export default class SuggestScreen extends React.Component<Props> {
           </Text>
           <View style={styles.setupContainer}>
             <View style={styles.innerSetupView}>
-              <Text style={[styles.innerSetupText, styles.marginTop, styles.marginBottom]}>Notify Upvotes</Text>
+              <Text
+                style={[
+                  styles.innerSetupText,
+                  styles.marginTop,
+                  styles.marginBottom
+                ]}
+              >
+                Notify Upvotes
+              </Text>
               <Switch
                 trackColor={{ true: "#64BF48", false: "#B0B4B7" }}
                 thumbColor={"#67AB53"}
@@ -109,21 +149,17 @@ export default class SuggestScreen extends React.Component<Props> {
               ></Switch>
             </View>
           </View>
-          <View
-              style={[styles.sliderView, styles.marginTop]}
-            >
-              <Slider
-                minimumTrackTintColor="#508B69"
-                thumbStyle={styles.slider}
-                minimumValue={500}
-                maximumValue={2000}
-                value={this.state.distance}
-                onValueChange={value => this.setState({ distance: value })}
-              />
-              <Text
-                style={styles.sliderText}
-              ></Text>
-            </View>
+          <View style={[styles.sliderView, styles.marginTop]}>
+            <Slider
+              minimumTrackTintColor="#508B69"
+              thumbStyle={styles.slider}
+              minimumValue={500}
+              maximumValue={2000}
+              value={this.state.distance}
+              onValueChange={value => this.setState({ distance: value })}
+            />
+            <Text style={styles.sliderText}></Text>
+          </View>
         </ScrollView>
       </SafeAreaView>
     );
