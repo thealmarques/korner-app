@@ -3,7 +3,7 @@ import {
   createSwitchNavigator,
   SafeAreaView
 } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator} from "react-navigation-stack";
 import IntroPage from "./screens/intro/intro";
 import LoginPage from "./screens/login/login";
 import RegisterPage from "./screens/register/register";
@@ -15,6 +15,8 @@ import React, { Component } from "react";
 import { View, Text } from "native-base";
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 import SuggestScreen from "./screens/suggest/suggest";
+import { Provider } from 'react-redux';
+import { Store } from './shared/store';
 
 const CustomDrawerComponent = props => {
   return (
@@ -83,7 +85,7 @@ const AuthStack = createStackNavigator({
   }
 });
 
-const App = createAppContainer(
+const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
       Dependencies: DependenciesLoader,
@@ -96,4 +98,16 @@ const App = createAppContainer(
   )
 );
 
-export default App;
+export default class AppNavigation extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Provider store={Store}>
+        <AppContainer />
+      </Provider>
+    );
+  }
+};

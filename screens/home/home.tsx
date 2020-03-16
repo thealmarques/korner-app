@@ -1,18 +1,23 @@
 import React from "react";
 import { SafeAreaView } from "react-navigation";
 import Header from "../../shared/components/header/header";
-import { AsyncStorage, Image, YellowBox } from "react-native";
+import { AsyncStorage, Image } from "react-native";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import MapView, { MapEvent, Marker, Region } from "react-native-maps";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import CreateEventComponent from "../../shared/components/new-event/create";
+import { connect } from 'react-redux';
+import { saveLocation } from '../../shared/store/actions'
+
 interface Props {
   navigation: any;
+  saveLocation: any;
+  location: any;
 }
 
-export default class HomePage extends React.Component<Props> {
+class HomePage extends React.Component<Props> {
   state = {
     region: null,
     locationName: null,
@@ -24,7 +29,8 @@ export default class HomePage extends React.Component<Props> {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.navigation.state.params.event === "create") {
+    if (nextProps.navigation.state.params 
+          && nextProps.navigation.state.params.event === "create") {
       this.setState({
         showCreateEvent: false,
         clickedLocation: null
@@ -44,7 +50,6 @@ export default class HomePage extends React.Component<Props> {
     });
 
     this.setMap(provider);
-
     await this.storeLocation(provider);
     return true;
   }
@@ -54,7 +59,8 @@ export default class HomePage extends React.Component<Props> {
   }
 
   private async readLocation() {
-    return JSON.parse(await AsyncStorage.getItem("LOCATION"));
+    const location = JSON.parse(await AsyncStorage.getItem("LOCATION"));
+    return location;
   }
 
   private async setMap(region: Location.LocationData) {
@@ -66,7 +72,7 @@ export default class HomePage extends React.Component<Props> {
       latitude: region.coords.latitude,
       longitude: region.coords.longitude
     });
-
+    this.props.saveLocation(name);
     if (name.length > 0) {
       if (name[0].city === null) {
         this.setState({
@@ -202,3 +208,12 @@ export default class HomePage extends React.Component<Props> {
       });
   }
 }
+
+const mapStateToProps = store => ({
+  location: store.saveLocation.location
+});
+const mapDispatchToProps = dispatch => ({
+  saveLocation: (location) => dispatch(saveLocation(location))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps) (HomePage);
