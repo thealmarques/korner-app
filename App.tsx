@@ -17,6 +17,7 @@ import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsi
 import SuggestScreen from "./screens/suggest/suggest";
 import { Provider } from 'react-redux';
 import { Store } from './shared/store';
+import OpenScreen from "./screens/open/open";
 
 const CustomDrawerComponent = props => {
   return (
@@ -53,6 +54,12 @@ const AppStack = createDrawerNavigator(
     },
     Suggest: {
       screen: SuggestScreen,
+      navigationOptions: {
+        drawerLabel: () => null
+      }
+    },
+    Open: {
+      screen: OpenScreen,
       navigationOptions: {
         drawerLabel: () => null
       }

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Switch } from "native-base";
+import { View, Text } from "native-base";
 import {
   ScrollView,
   TouchableWithoutFeedback,
@@ -10,23 +10,23 @@ import { styles } from "./styles";
 import { SafeAreaView, Image } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
-import Slider from "react-native-slider";
 import { saveMarker } from "../../shared/api/api";
+import * as ImagePicker from "expo-image-picker";
 
 interface Props {
   navigation: any;
 }
 
-export default class SuggestScreen extends React.Component<Props> {
+export default class OpenScreen extends React.Component<Props> {
   scrollViewRef = null;
   state = {
     selectedCategory: "1",
     selectedSubCategory: "1",
     description: "",
-    notifyUpvotes: true,
-    notifyCreated: true,
     distance: 1000,
-    location: this.props.navigation.state.params.location
+    location: this.props.navigation.state.params.location,
+    blobImages: [],
+    uriImages: []
   };
   create = {
     title: "Create",
@@ -37,14 +37,14 @@ export default class SuggestScreen extends React.Component<Props> {
         this.state.selectedCategory,
         this.state.selectedSubCategory,
         this.state.description,
-        this.state.notifyUpvotes,
-        this.state.notifyCreated,
+        null,
+        null,
         this.state.distance,
-        'suggest'
+        "open"
       )
         .then(value => {
-          this.props.navigation.navigate('Home', {
-            event: 'create'
+          this.props.navigation.navigate("Home", {
+            event: "create"
           });
         })
         .catch(error => {
@@ -108,62 +108,61 @@ export default class SuggestScreen extends React.Component<Props> {
               placeholder="What type of service you want ?"
             ></TextInput>
           </View>
-          <Text style={[styles.text, styles.marginTop, styles.marginBottom]}>
-            Setup Notifications
+          <Text style={[styles.marginTop, styles.text, styles.marginBottom]}>
+            Upload photos of your space
           </Text>
-          <View style={styles.setupContainer}>
-            <View style={styles.innerSetupView}>
-              <Text
-                style={[
-                  styles.innerSetupText,
-                  styles.marginTop,
-                  styles.marginBottom
-                ]}
-              >
-                Notify Upvotes
-              </Text>
-              <Switch
-                trackColor={{ true: "#64BF48", false: "#B0B4B7" }}
-                thumbColor={"#67AB53"}
-                onValueChange={value => {
-                  this.setState({
-                    notifyUpvotes: value
-                  });
-                }}
-                value={this.state.notifyUpvotes}
-              ></Switch>
-            </View>
-            <View style={[styles.innerSetupView, styles.marginTop]}>
-              <Text style={[styles.innerSetupText, styles.marginTop]}>
-                Notify if a new local business is created within range (
-                {Number(this.state.distance).toFixed(0)}m)
-              </Text>
-              <Switch
-                trackColor={{ true: "#64BF48", false: "#B0B4B7" }}
-                thumbColor={"#67AB53"}
-                onValueChange={value => {
-                  this.setState({
-                    notifyCreated: value
-                  });
-                }}
-                value={this.state.notifyCreated}
-              ></Switch>
-            </View>
-          </View>
-          <View style={[styles.sliderView, styles.marginTop]}>
-            <Slider
-              minimumTrackTintColor="#508B69"
-              thumbStyle={styles.slider}
-              minimumValue={500}
-              maximumValue={2000}
-              value={this.state.distance}
-              onValueChange={value => this.setState({ distance: value })}
-            />
-            <Text style={styles.sliderText}></Text>
+          <View style={[styles.uploadContainer, styles.marginTop]}>
+            <TouchableWithoutFeedback
+              onPress={() => this.imagePicker()}
+              style={[styles.browseContainer, styles.shadow]}
+            >
+              <Image
+                style={styles.browseImage}
+                source={require("../../shared/assets/upload.png")}
+              ></Image>
+              <View style={styles.browseTextContainer}>
+                <Text style={styles.browseText}>Browse</Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </ScrollView>
       </SafeAreaView>
     );
+  }
+
+  imagePicker() {
+    ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images
+    }).then(async (result: any) => {
+      if (!result.cancelled) {
+        const { height, width, type, uri } = result;
+        console.log(uri);
+        const blob = await this.convertUriToBlob(uri);
+        if (blob) {
+            this.setState({
+                blobImages: this.state.blobImages.concat([blob]),
+                uriImages: this.state.uriImages.concat([uri])
+            });
+        }
+      }
+    });
+  }
+
+  convertUriToBlob(uri: string): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+
+      xhr.onerror = function() {
+        reject(new Error("Blob generator failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+
+      xhr.send(null);
+    });
   }
 
   renderCategories(category) {
