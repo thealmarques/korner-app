@@ -7,7 +7,7 @@ import {
   FlatList
 } from "react-native-gesture-handler";
 import { styles } from "./styles";
-import { SafeAreaView, Image } from "react-native";
+import { SafeAreaView, Image, PanResponder } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import { saveMarker } from "../../shared/api/api";
@@ -26,7 +26,7 @@ export default class OpenScreen extends React.Component<Props> {
     distance: 1000,
     location: this.props.navigation.state.params.location,
     blobImages: [],
-    uriImages: []
+    base64Images: []
   };
   create = {
     title: "Create",
@@ -112,6 +112,7 @@ export default class OpenScreen extends React.Component<Props> {
             Upload photos of your space
           </Text>
           <View style={[styles.uploadContainer, styles.marginTop]}>
+            {this.getUploadedImages()}
             <TouchableWithoutFeedback
               onPress={() => this.imagePicker()}
               style={[styles.browseContainer, styles.shadow]}
@@ -136,13 +137,13 @@ export default class OpenScreen extends React.Component<Props> {
     }).then(async (result: any) => {
       if (!result.cancelled) {
         const { height, width, type, uri } = result;
-        console.log(uri);
         const blob = await this.convertUriToBlob(uri);
         if (blob) {
-            this.setState({
-                blobImages: this.state.blobImages.concat([blob]),
-                uriImages: this.state.uriImages.concat([uri])
-            });
+          const base64 = await this.convertToBase64(blob);
+          this.setState({
+            blobImages: this.state.blobImages.concat([blob]),
+            base64Images: this.state.base64Images.concat([base64])
+          });
         }
       }
     });
@@ -162,6 +163,29 @@ export default class OpenScreen extends React.Component<Props> {
       xhr.open("GET", uri, true);
 
       xhr.send(null);
+    });
+  }
+
+  getUploadedImages() {
+    return this.state.base64Images.map((base64, index) => {
+      return (
+        <Image
+          key={index}
+          style={styles.uplodedImage}
+          source={{ uri: base64.toString() }}
+        ></Image>
+      );
+    });
+  }
+
+  convertToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const fileReaderInstance = new FileReader();
+      fileReaderInstance.readAsDataURL(blob);
+      fileReaderInstance.onload = () => {
+        const base64data = fileReaderInstance.result;
+        resolve(base64data);
+      };
     });
   }
 

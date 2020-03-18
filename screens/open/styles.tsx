@@ -158,5 +158,11 @@ export const styles = EStyleSheet.create({
     fontFamily: "quicksand-bold",
     color: "white",
     fontSize: "12rem"
+  },
+  uplodedImage: {
+    width: "90rem",
+    height: "85rem",
+    marginRight: "20rem",
+    marginBottom: "10rem"
   }
 });
