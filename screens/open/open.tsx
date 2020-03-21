@@ -4,10 +4,19 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   TextInput,
-  FlatList
+  FlatList,
+  PanGestureHandler,
+  State
 } from "react-native-gesture-handler";
 import { styles } from "./styles";
-import { SafeAreaView, Image, PanResponder } from "react-native";
+import {
+  SafeAreaView,
+  Image,
+  Animated,
+  Dimensions,
+  NativeScrollEvent,
+  NativeSyntheticEvent
+} from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import { saveMarker } from "../../shared/api/api";
@@ -19,6 +28,7 @@ interface Props {
 
 export default class OpenScreen extends React.Component<Props> {
   scrollViewRef = null;
+  point = [];
   state = {
     selectedCategory: "1",
     selectedSubCategory: "1",
@@ -26,8 +36,10 @@ export default class OpenScreen extends React.Component<Props> {
     distance: 1000,
     location: this.props.navigation.state.params.location,
     blobImages: [],
-    base64Images: []
+    base64Images: [],
+    showDelete: false
   };
+
   create = {
     title: "Create",
     callback: () => {
@@ -66,9 +78,37 @@ export default class OpenScreen extends React.Component<Props> {
     }
   }
 
+  showDeleteIcon() {
+    if (this.state.showDelete) {
+      return (
+        <View
+          style={{
+            position: "absolute",
+            marginTop: "15%",
+            alignContent: "center",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            right: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            height: "10%",
+            elevation: 3
+          }}
+        >
+          <Image
+            style={[styles.deleteIcon]}
+            source={require("../../shared/assets/close.png")}
+          ></Image>
+        </View>
+      );
+    }
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.screen}>
+        {this.showDeleteIcon()}
         <ScrollView>
           <Header
             locationName=""
@@ -140,6 +180,7 @@ export default class OpenScreen extends React.Component<Props> {
         const blob = await this.convertUriToBlob(uri);
         if (blob) {
           const base64 = await this.convertToBase64(blob);
+          this.point[this.state.base64Images.length] = new Animated.ValueXY();
           this.setState({
             blobImages: this.state.blobImages.concat([blob]),
             base64Images: this.state.base64Images.concat([base64])
@@ -166,14 +207,98 @@ export default class OpenScreen extends React.Component<Props> {
     });
   }
 
+  onHandlerStateChange({ nativeEvent }, index) {
+    if (nativeEvent.state === State.END) {
+      const width = Dimensions.get("window").width;
+      const height = Dimensions.get("window").height;
+      const heightOffset = (height * 15) / 100;
+      const imageWidth = 35 * (width / 380);
+      const imageHeight = 35 * (height / 380);
+      const middleWidth = width / 2;
+      if (
+        nativeEvent.absoluteY < heightOffset + imageHeight &&
+        nativeEvent.absoluteY > heightOffset - imageHeight
+      ) {
+        if (
+          nativeEvent.absoluteX < middleWidth + imageWidth &&
+          nativeEvent.absoluteX > middleWidth - imageWidth
+        ) {
+          this.point = this.point.filter((value, idx) => {
+            if (idx !== index) {
+              return value;
+            }
+          });
+          const auxBase64 = this.state.base64Images.filter((value, idx) => {
+            if (idx !== index) {
+              return value;
+            }
+          });
+          const auxBlob = this.state.blobImages.filter((value, idx) => {
+            if (idx !== index) {
+              return value;
+            }
+          });
+          this.setState({
+            base64Images: auxBase64,
+            showDelete: false,
+            blobImages: auxBlob
+          });
+        }
+      } else {
+        Animated.spring(this.point[index], { toValue: { x: 0, y: 0 } }).start();
+        this.setState({
+          showDelete: false
+        });
+      }
+    } else {
+      this.setState({
+        showDelete: true
+      });
+    }
+  }
+
+  _onPanGestureEvent = index =>
+    Animated.event(
+      [
+        {
+          nativeEvent: {
+            translationX: this.point[index].x,
+            translationY: this.point[index].y
+          }
+        }
+      ],
+      { useNativeDriver: false }
+    );
+
   getUploadedImages() {
     return this.state.base64Images.map((base64, index) => {
       return (
-        <Image
+        <PanGestureHandler
+          onGestureEvent={this._onPanGestureEvent(index)}
+          onHandlerStateChange={({ nativeEvent }) =>
+            this.onHandlerStateChange({ nativeEvent }, index)
+          }
           key={index}
-          style={styles.uplodedImage}
-          source={{ uri: base64.toString() }}
-        ></Image>
+        >
+          <Animated.View
+            key={index}
+            style={[
+              { elevation: 2 },
+              {
+                transform: [
+                  { translateY: this.point[index].y },
+                  { translateX: this.point[index].x }
+                ]
+              }
+            ]}
+          >
+            <Image
+              key={"upload-" + index}
+              style={[styles.uplodedImage]}
+              source={{ uri: base64.toString() }}
+            ></Image>
+          </Animated.View>
+        </PanGestureHandler>
       );
     });
   }

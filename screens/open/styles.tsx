@@ -164,5 +164,9 @@ export const styles = EStyleSheet.create({
     height: "85rem",
     marginRight: "20rem",
     marginBottom: "10rem"
+  },
+  deleteIcon: {
+    width: "35rem",
+    height: "35rem",
   }
 });
