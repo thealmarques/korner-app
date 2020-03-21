@@ -19,7 +19,7 @@ import {
 } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
-import { saveMarker } from "../../shared/api/api";
+import { saveMarker, storeImages } from "../../shared/api/api";
 import * as ImagePicker from "expo-image-picker";
 
 interface Props {
@@ -54,7 +54,8 @@ export default class OpenScreen extends React.Component<Props> {
         this.state.distance,
         "open"
       )
-        .then(value => {
+        .then(doc => {
+          storeImages(doc.id, this.state.blobImages);
           this.props.navigation.navigate("Home", {
             event: "create"
           });
