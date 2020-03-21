@@ -180,7 +180,6 @@ export default class OpenScreen extends React.Component<Props> {
         const blob = await this.convertUriToBlob(uri);
         if (blob) {
           const base64 = await this.convertToBase64(blob);
-          this.point[this.state.base64Images.length] = new Animated.ValueXY();
           this.setState({
             blobImages: this.state.blobImages.concat([blob]),
             base64Images: this.state.base64Images.concat([base64])
@@ -223,11 +222,6 @@ export default class OpenScreen extends React.Component<Props> {
           nativeEvent.absoluteX < middleWidth + imageWidth &&
           nativeEvent.absoluteX > middleWidth - imageWidth
         ) {
-          this.point = this.point.filter((value, idx) => {
-            if (idx !== index) {
-              return value;
-            }
-          });
           const auxBase64 = this.state.base64Images.filter((value, idx) => {
             if (idx !== index) {
               return value;
@@ -271,7 +265,9 @@ export default class OpenScreen extends React.Component<Props> {
     );
 
   getUploadedImages() {
+    this.point = new Array();
     return this.state.base64Images.map((base64, index) => {
+      this.point[index] = new Animated.ValueXY(); 
       return (
         <PanGestureHandler
           onGestureEvent={this._onPanGestureEvent(index)}
