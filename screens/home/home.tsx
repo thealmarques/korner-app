@@ -1,26 +1,21 @@
 import React from "react";
 import { SafeAreaView } from "react-navigation";
 import Header from "../../shared/components/header/header";
-import { AsyncStorage, Image } from "react-native";
-import * as Location from "expo-location";
-import * as Permissions from "expo-permissions";
+import { Image } from "react-native";
 import MapView, { MapEvent, Marker, Region } from "react-native-maps";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import CreateEventComponent from "../../shared/components/new-event/create";
-import { connect } from 'react-redux';
-import { saveLocation } from '../../shared/store/actions'
+import { connect } from "react-redux";
 
 interface Props {
   navigation: any;
-  saveLocation: any;
-  location: any;
+  coordinates: any;
+  locationName: any;
 }
 
 class HomePage extends React.Component<Props> {
   state = {
-    region: null,
-    locationName: null,
     latitudeDelta: 0,
     longitudeDelta: 0,
     markers: [],
@@ -39,65 +34,7 @@ class HomePage extends React.Component<Props> {
     }
   }
 
-  private async getLocation() {
-    const response: any = await Permissions.askAsync(Permissions.LOCATION);
-    if (response.granted !== "granted" && response.granted) {
-      return false;
-    }
-
-    var provider = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.High
-    });
-
-    this.setMap(provider);
-    await this.storeLocation(provider);
-    return true;
-  }
-
-  private async storeLocation(location) {
-    await AsyncStorage.setItem("LOCATION", JSON.stringify(location));
-  }
-
-  private async readLocation() {
-    const location = JSON.parse(await AsyncStorage.getItem("LOCATION"));
-    return location;
-  }
-
-  private async setMap(region: Location.LocationData) {
-    this.setState({
-      region: region
-    });
-
-    const name = await Location.reverseGeocodeAsync({
-      latitude: region.coords.latitude,
-      longitude: region.coords.longitude
-    });
-    this.props.saveLocation(name);
-    if (name.length > 0) {
-      if (name[0].city === null) {
-        this.setState({
-          locationName: name[0].street + "," + name[0].country
-        });
-      } else {
-        this.setState({
-          locationName: name[0].city + "," + name[0].country
-        });
-      }
-    } else {
-      this.setState({
-        locationName: "Define location"
-      });
-    }
-  }
-
-  async componentWillMount() {
-    AsyncStorage.removeItem("LOCATION");
-    const location = await this.readLocation();
-    if (location !== null) {
-      this.setMap(location);
-    } else {
-      await this.getLocation();
-    }
+  componentWillMount() {
     this.fetchMarkers();
   }
 
@@ -105,7 +42,7 @@ class HomePage extends React.Component<Props> {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
         <Header
-          locationName={this.state.locationName}
+          locationName={this.props.locationName}
           navigation={this.props.navigation}
           command={undefined}
         ></Header>
@@ -129,12 +66,12 @@ class HomePage extends React.Component<Props> {
   }
 
   showMap() {
-    if (this.state.region !== null) {
+    if (this.props.coordinates !== null) {
       return (
         <MapView
           initialRegion={{
-            latitude: this.state.region.coords.latitude,
-            longitude: this.state.region.coords.longitude,
+            latitude: this.props.coordinates.latitude,
+            longitude: this.props.coordinates.longitude,
             latitudeDelta: this.state.latitudeDelta,
             longitudeDelta: this.state.longitudeDelta
           }}
@@ -210,10 +147,8 @@ class HomePage extends React.Component<Props> {
 }
 
 const mapStateToProps = store => ({
-  location: store.saveLocation.location
-});
-const mapDispatchToProps = dispatch => ({
-  saveLocation: (location) => dispatch(saveLocation(location))
+  coordinates: store.userLocation.coordinates,
+  locationName: store.userLocation.name
 });
 
-export default connect(mapStateToProps, mapDispatchToProps) (HomePage);
+export default connect(mapStateToProps)(HomePage);

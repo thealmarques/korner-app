@@ -1,1 +1,1 @@
-export const SAVE_LOCATION = 'SAVE_LOCATION';
+export const USER_LOCATION = 'USER_LOCATION';

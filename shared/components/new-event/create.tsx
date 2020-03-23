@@ -42,7 +42,7 @@ export default class CreateEventComponent extends React.Component<Props> {
           </View>
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={() => navigate("Open", {location: this.props.location})}
+          onPress={() => navigate("Open")}
           underlayColor="white"
           activeOpacity={0.3}
         >

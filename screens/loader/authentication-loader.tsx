@@ -18,7 +18,6 @@ export default class AuthenticationLoader extends React.Component<Props> {
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
   }
 
-  // Render any loading content that you like here
   render() {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>

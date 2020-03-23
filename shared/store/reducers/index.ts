@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { saveLocation } from './saveLocation';
+import { userLocation } from './userLocation';
 
 export const Reducers = combineReducers({
-    saveLocation: saveLocation,
+    userLocation: userLocation,
 });
