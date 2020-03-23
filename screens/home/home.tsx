@@ -5,7 +5,7 @@ import { Image } from "react-native";
 import MapView, { MapEvent, Marker, Region } from "react-native-maps";
 import * as firebase from "firebase";
 import "firebase/firestore";
-import CreateEventComponent from "../../shared/components/new-event/create";
+import CreateEventComponent from "../../shared/components/create-marker/create";
 import { connect } from "react-redux";
 
 interface Props {
