@@ -20,6 +20,7 @@ import { categories } from "../../shared/constants/categories";
 import { saveMarker, storeImages } from "../../shared/api/api";
 import * as ImagePicker from "expo-image-picker";
 import { BackHandler } from 'react-native';
+import { convertUriToBlob, convertToBase64 } from '../../shared/Helper';
 
 interface Props {
   navigation: any;
@@ -196,32 +197,15 @@ class OpenScreen extends React.Component<Props> {
     }).then(async (result: any) => {
       if (!result.cancelled) {
         const { height, width, type, uri } = result;
-        const blob = await this.convertUriToBlob(uri);
+        const blob = await convertUriToBlob(uri);
         if (blob) {
-          const base64 = await this.convertToBase64(blob);
+          const base64 = await convertToBase64(blob);
           this.setState({
             blobImages: this.state.blobImages.concat([blob]),
             base64Images: this.state.base64Images.concat([base64])
           });
         }
       }
-    });
-  }
-
-  convertUriToBlob(uri: string): Promise<Blob> {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        resolve(xhr.response);
-      };
-
-      xhr.onerror = function() {
-        reject(new Error("Blob generator failed"));
-      };
-      xhr.responseType = "blob";
-      xhr.open("GET", uri, true);
-
-      xhr.send(null);
     });
   }
 
@@ -315,17 +299,6 @@ class OpenScreen extends React.Component<Props> {
           </Animated.View>
         </PanGestureHandler>
       );
-    });
-  }
-
-  convertToBase64(blob) {
-    return new Promise((resolve, reject) => {
-      const fileReaderInstance = new FileReader();
-      fileReaderInstance.readAsDataURL(blob);
-      fileReaderInstance.onload = () => {
-        const base64data = fileReaderInstance.result;
-        resolve(base64data);
-      };
     });
   }
 

@@ -17,6 +17,7 @@ import BackComponent from "../../shared/components/back-arrow/back";
 import * as firebase from 'firebase';
 import * as ImagePicker from 'expo-image-picker';
 import { Validator } from "../../shared/Validator";
+import { convertUriToBlob } from "../../shared/Helper";
 
 interface Props {
   navigation: any
@@ -62,7 +63,7 @@ export default class RegisterPage extends React.Component<Props> {
                     ImagePicker.launchImageLibraryAsync({mediaTypes: ImagePicker.MediaTypeOptions.Images}).then(async (result: any) => {
                       if (!result.cancelled) {
                         const {height, width, type, uri} = result;
-                        const blob = await this.convertUriToBlob(uri);
+                        const blob = await convertUriToBlob(uri);
                         this.setState({base64Image: blob ? blob : undefined});
                       }
                     });
@@ -112,23 +113,6 @@ export default class RegisterPage extends React.Component<Props> {
       this.props.navigation.navigate('App');
     }).catch((error) => {
         Alert.alert('Error', error.message);
-    });
-  }
-
-  convertUriToBlob(uri: string): Promise<Blob> {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        resolve(xhr.response);
-      };
-      
-      xhr.onerror = function() {
-        reject(new Error('Blob generator failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      
-      xhr.send(null);
     });
   }
 }
