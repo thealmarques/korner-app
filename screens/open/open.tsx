@@ -19,13 +19,10 @@ import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import { saveMarker, storeImages } from "../../shared/api/api";
 import * as ImagePicker from "expo-image-picker";
-import { connect } from "react-redux";
 import { BackHandler } from 'react-native';
 
 interface Props {
   navigation: any;
-  coordinates: any;
-  locationName: string;
 }
 
 class OpenScreen extends React.Component<Props> {
@@ -38,15 +35,16 @@ class OpenScreen extends React.Component<Props> {
     distance: 1000,
     blobImages: [],
     base64Images: [],
-    showDelete: false
+    showDelete: false,
+    location: this.props.navigation.state.params.location
   };
 
   create = {
     title: "Create",
     callback: () => {
       saveMarker(
-        this.props.coordinates.latitude,
-        this.props.coordinates.longitude,
+        this.state.location.latitude,
+        this.state.location.longitude,
         this.state.selectedCategory,
         this.state.selectedSubCategory,
         this.state.description,
@@ -60,6 +58,7 @@ class OpenScreen extends React.Component<Props> {
           this.props.navigation.navigate("Home", {
             event: "create"
           });
+          this.resetState();
         })
         .catch(error => {
           alert(error.message);
@@ -73,16 +72,29 @@ class OpenScreen extends React.Component<Props> {
     BackHandler.addEventListener('hardwareBackPress', this.onBackHandler.bind(this));
   }
 
-  onBackHandler() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.navigation.state.params.location) {
       this.setState({
-        selectedCategory: "1",
-        selectedSubCategory: "1",
-        description: "",
-        distance: 1000,
-        blobImages: [],
-        base64Images: [],
-        showDelete: false
+        location: nextProps.navigation.state.params.location
       });
+    }
+  }
+  
+  onBackHandler() {
+      this.resetState();
+  }
+
+  resetState() {
+    this.setState({
+      selectedCategory: "1",
+      selectedSubCategory: "1",
+      description: "",
+      distance: 1000,
+      blobImages: [],
+      base64Images: [],
+      showDelete: false,
+      location: this.props.navigation.state.params.location
+    });
   }
 
   showDeleteIcon() {
@@ -406,9 +418,4 @@ class OpenScreen extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = store => ({
-  coordinates: store.userLocation.coordinates,
-  locationName: store.userLocation.name
-});
-
-export default connect(mapStateToProps)(OpenScreen);
+export default OpenScreen;

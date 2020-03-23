@@ -12,6 +12,7 @@ import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import Slider from "react-native-slider";
 import { saveMarker } from "../../shared/api/api";
+import { BackHandler } from "react-native";
 
 interface Props {
   navigation: any;
@@ -40,11 +41,11 @@ export default class SuggestScreen extends React.Component<Props> {
         this.state.notifyUpvotes,
         this.state.notifyCreated,
         this.state.distance,
-        'suggest'
+        "suggest"
       )
         .then(value => {
-          this.props.navigation.navigate('Home', {
-            event: 'create'
+          this.props.navigation.navigate("Home", {
+            event: "create"
           });
         })
         .catch(error => {
@@ -56,6 +57,26 @@ export default class SuggestScreen extends React.Component<Props> {
   constructor(props) {
     super(props);
     this.scrollViewRef = React.createRef();
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.onBackHandler.bind(this)
+    );
+  }
+
+  onBackHandler() {
+    this.resetState();
+  }
+
+  resetState() {
+    this.setState({
+      selectedCategory: "1",
+      selectedSubCategory: "1",
+      description: "",
+      notifyUpvotes: true,
+      notifyCreated: true,
+      distance: 1000,
+      location: this.props.navigation.state.params.location
+    });
   }
 
   componentWillReceiveProps(nextProps) {
