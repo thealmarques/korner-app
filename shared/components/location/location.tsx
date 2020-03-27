@@ -6,6 +6,7 @@ import { styles } from "./styles";
 interface Props {
   navigation: any;
   locationName: string;
+  locationPressed: any;
 }
 
 export default class LocationComponent extends React.Component<Props> {
@@ -15,7 +16,7 @@ export default class LocationComponent extends React.Component<Props> {
         <View>
           <TouchableOpacity
             style={styles.container}
-            onPress={() => alert("To navigate in the future")}
+            onPress={() => this.props.locationPressed()}
           >
             <Image
               style={styles.stretch}

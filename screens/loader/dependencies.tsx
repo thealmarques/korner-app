@@ -31,7 +31,9 @@ class DependenciesLoader extends React.Component<Props> {
       require("../../shared/assets/coffee-cup.png"),
       require("../../shared/assets/beer.png"),
       require("../../shared/assets/upload.png"),
-      require("../../shared/assets/close.png")
+      require("../../shared/assets/close.png"),
+      require("../../shared/assets/search.png"),
+      require("../../shared/assets/compass.png")
     ]);
     await Font.loadAsync({
       "quicksand-regular": require("../../shared/assets/fonts/Quicksand-Regular.ttf"),

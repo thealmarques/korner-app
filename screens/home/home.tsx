@@ -7,6 +7,14 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import CreateEventComponent from "../../shared/components/create-marker/create";
 import { connect } from "react-redux";
+import { styles } from "./styles";
+import { View, Text } from "native-base";
+import {
+  TextInput,
+  FlatList,
+  TouchableWithoutFeedback
+} from "react-native-gesture-handler";
+import * as Location from "expo-location";
 
 interface Props {
   navigation: any;
@@ -14,18 +22,34 @@ interface Props {
   locationName: any;
 }
 
+function Item({ title }) {
+  return (
+    <TouchableWithoutFeedback onPress={() => alert("Soon")}>
+      <View style={styles.item}>
+        <Text style={styles.title}>{title}</Text>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+}
+
 class HomePage extends React.Component<Props> {
+  searchWaiting = null;
   state = {
     latitudeDelta: 0,
     longitudeDelta: 0,
     markers: [],
     showCreateEvent: false,
-    clickedLocation: null
+    clickedLocation: null,
+    searchLocation: "",
+    showChangeLocation: false,
+    searchResult: []
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.navigation.state.params 
-          && nextProps.navigation.state.params.event === "create") {
+    if (
+      nextProps.navigation.state.params &&
+      nextProps.navigation.state.params.event === "create"
+    ) {
       this.setState({
         showCreateEvent: false,
         clickedLocation: null
@@ -45,11 +69,92 @@ class HomePage extends React.Component<Props> {
           locationName={this.props.locationName}
           navigation={this.props.navigation}
           command={undefined}
+          changeLocation={() =>
+            this.setState({
+              showChangeLocation: !this.state.showChangeLocation
+            })
+          }
         ></Header>
+        {this.changeLocation()}
+        {this.renderSearchResults()}
         {this.showMap()}
         {this.showCreateEvent()}
       </SafeAreaView>
     );
+  }
+
+  changeLocation() {
+    if (this.state.showChangeLocation) {
+      return (
+        <View style={styles.changeLocationContainer}>
+          <Image
+            style={styles.searchIcon}
+            source={require("../../shared/assets/search.png")}
+          ></Image>
+          <TextInput
+            style={styles.searchBar}
+            placeholderTextColor="white"
+            onChangeText={text => {
+              if (this.searchWaiting) clearTimeout(this.searchWaiting);
+              this.searchWaiting = setTimeout(() => {
+                this.searchWaiting = null;
+                this.updateSearchResults(text.toLowerCase());
+              }, 1000);
+              this.setState({ searchLocation: text });
+            }}
+            value={this.state.searchLocation}
+            placeholder="Search your location..."
+          />
+          <Image
+            style={styles.compassIcon}
+            source={require("../../shared/assets/compass.png")}
+          ></Image>
+        </View>
+      );
+    }
+  }
+
+  renderSearchResults() {
+    if (this.state.searchLocation !== "") {
+      return (
+        <SafeAreaView style={styles.searchResults}>
+          <FlatList
+            data={this.state.searchResult}
+            renderItem={({ item }) => {
+              const name =
+                item[0].street +
+                " " +
+                item[0].name +
+                ", " +
+                item[0].city +
+                ", " +
+                item[0].country;
+              return <Item title={name}></Item>;
+            }}
+            keyExtractor={(item, index) => {
+              return "search-" + index;
+            }}
+          />
+        </SafeAreaView>
+      );
+    }
+  }
+
+  updateSearchResults(text: string) {
+    Location.geocodeAsync(text).then(async result => {
+      const searchResult = [];
+      for (let i = 0; i < result.length; i++) {
+        const spot = result[i];
+        const data = await Location.reverseGeocodeAsync({
+          latitude: spot.latitude,
+          longitude: spot.longitude
+        });
+        searchResult.push(data);
+      }
+      this.setState({
+        searchResult: searchResult
+      });
+    });
   }
 
   showCreateEvent() {
@@ -66,7 +171,7 @@ class HomePage extends React.Component<Props> {
   }
 
   showMap() {
-    if (this.props.coordinates !== null) {
+    if (this.props.coordinates !== null && this.state.searchLocation === "") {
       return (
         <MapView
           initialRegion={{

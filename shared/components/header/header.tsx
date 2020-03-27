@@ -10,6 +10,7 @@ interface Props {
   navigation: any;
   locationName: string;
   command: any;
+  changeLocation: any;
 }
 
 class Header extends React.Component<Props> {
@@ -29,6 +30,7 @@ class Header extends React.Component<Props> {
         <LocationComponent
           locationName={this.props.locationName}
           navigation={this.props.navigation}
+          locationPressed={() => this.props.changeLocation()}
         ></LocationComponent>
       );
     }
