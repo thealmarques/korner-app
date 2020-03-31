@@ -15,21 +15,14 @@ import {
   TouchableWithoutFeedback
 } from "react-native-gesture-handler";
 import * as Location from "expo-location";
+import { userLocation } from "../../shared/store/actions";
+import { getLocation } from "../../shared/Helper";
 
 interface Props {
   navigation: any;
   coordinates: any;
   locationName: any;
-}
-
-function Item({ title }) {
-  return (
-    <TouchableWithoutFeedback onPress={() => alert("Soon")}>
-      <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-      </View>
-    </TouchableWithoutFeedback>
-  );
+  userLocation: any;
 }
 
 class HomePage extends React.Component<Props> {
@@ -105,10 +98,22 @@ class HomePage extends React.Component<Props> {
             value={this.state.searchLocation}
             placeholder="Search your location..."
           />
-          <Image
-            style={styles.compassIcon}
-            source={require("../../shared/assets/compass.png")}
-          ></Image>
+          <TouchableWithoutFeedback
+            onPress={async () => {
+              const location: any = await getLocation();
+              this.props.userLocation(location.coordinates, location.name);
+              this.setState({
+                searchLocation: "",
+                showChangeLocation: false,
+                searchResult: []
+              });
+            }}
+          >
+            <Image
+              style={styles.compassIcon}
+              source={require("../../shared/assets/compass.png")}
+            ></Image>
+          </TouchableWithoutFeedback>
         </View>
       );
     }
@@ -129,7 +134,32 @@ class HomePage extends React.Component<Props> {
                 item[0].city +
                 ", " +
                 item[0].country;
-              return <Item title={name}></Item>;
+              return (
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    Location.geocodeAsync(name).then(
+                      (value: Location.GeocodedLocation[]) => {
+                        this.props.userLocation(
+                          {
+                            latitude: value[0].latitude,
+                            longitude: value[0].longitude
+                          },
+                          name
+                        );
+                        this.setState({
+                          searchLocation: "",
+                          showChangeLocation: false,
+                          searchResult: []
+                        });
+                      }
+                    );
+                  }}
+                >
+                  <View style={styles.item}>
+                    <Text style={styles.title}>{name}</Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              );
             }}
             keyExtractor={(item, index) => {
               return "search-" + index;
@@ -171,14 +201,14 @@ class HomePage extends React.Component<Props> {
   }
 
   showMap() {
-    if (this.props.coordinates !== null && this.state.searchLocation === "") {
+    if (this.state.searchLocation === "") {
       return (
         <MapView
-          initialRegion={{
+          region={{
             latitude: this.props.coordinates.latitude,
             longitude: this.props.coordinates.longitude,
-            latitudeDelta: this.state.latitudeDelta,
-            longitudeDelta: this.state.longitudeDelta
+            latitudeDelta: 0,
+            longitudeDelta: 0
           }}
           rotateEnabled={false}
           style={{ flex: 1 }}
@@ -190,17 +220,6 @@ class HomePage extends React.Component<Props> {
           {this.showMarkers()}
         </MapView>
       );
-    } else {
-      <MapView
-        initialRegion={{
-          latitude: 37.421998333333335,
-          longitude: -122.08400000000002,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
-        }}
-        rotateEnabled={false}
-        style={{ flex: 1 }}
-      ></MapView>;
     }
   }
 
@@ -256,4 +275,8 @@ const mapStateToProps = store => ({
   locationName: store.userLocation.name
 });
 
-export default connect(mapStateToProps)(HomePage);
+const mapDispatchToProps = dispatch => ({
+  userLocation: (coordinates, name) => dispatch(userLocation(coordinates, name))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

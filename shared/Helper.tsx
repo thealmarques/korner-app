@@ -1,3 +1,6 @@
+import * as Permissions from "expo-permissions";
+import * as Location from "expo-location";
+
 export function convertUriToBlob(uri: string): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -23,5 +26,40 @@ export function convertToBase64(blob) {
       const base64data = fileReaderInstance.result;
       resolve(base64data);
     };
+  });
+}
+
+export async function getLocation() {
+  return new Promise(async resolve => {
+    const response: any = await Permissions.askAsync(Permissions.LOCATION);
+    if (response.granted !== "granted" && response.granted) {
+      return false;
+    }
+
+    var provider = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.High
+    });
+
+    const coordinates = {
+      latitude: provider.coords.latitude,
+      longitude: provider.coords.longitude
+    };
+
+    const nameObj = await Location.reverseGeocodeAsync({
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude
+    });
+    const name =
+      nameObj[0].street +
+      " " +
+      nameObj[0].name +
+      ", " +
+      nameObj[0].city +
+      ", " +
+      nameObj[0].country;
+    resolve({
+      coordinates,
+      name
+    });
   });
 }

@@ -7,6 +7,7 @@ import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
 import { connect } from "react-redux";
 import { userLocation } from "../../shared/store/actions";
+import { getLocation } from "../../shared/Helper";
 
 interface Props {
   userLocation: any;
@@ -43,7 +44,8 @@ class DependenciesLoader extends React.Component<Props> {
   }
 
   async componentDidMount() {
-    await this.getLocation();
+    const location:any = await getLocation();
+    this.props.userLocation(location.coordinates, location.name);
     this.setState({
       locationLoaded: true
     });
@@ -64,37 +66,6 @@ class DependenciesLoader extends React.Component<Props> {
         ></AuthenticationLoader>
       );
     }
-  }
-
-  private async getLocation() {
-    const response: any = await Permissions.askAsync(Permissions.LOCATION);
-    if (response.granted !== "granted" && response.granted) {
-      return false;
-    }
-
-    var provider = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.High
-    });
-
-    const coordinates = {
-      latitude: provider.coords.latitude,
-      longitude: provider.coords.longitude
-    };
-
-    const nameObj = await Location.reverseGeocodeAsync({
-      latitude: coordinates.latitude,
-      longitude: coordinates.longitude
-    });
-    let name = "Define Location";
-    if (nameObj.length > 0) {
-      if (nameObj[0].city === null) {
-        name = nameObj[0].street + "," + nameObj[0].country;
-      } else {
-        name = nameObj[0].city + "," + nameObj[0].country;
-      }
-    }
-
-    this.props.userLocation(coordinates, name);
   }
 }
 

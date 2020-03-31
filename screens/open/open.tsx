@@ -21,6 +21,7 @@ import { saveMarker, storeImages } from "../../shared/api/api";
 import * as ImagePicker from "expo-image-picker";
 import { BackHandler } from 'react-native';
 import { convertUriToBlob, convertToBase64 } from '../../shared/Helper';
+import TimePikerComponent from "../../shared/components/time-picker/time-picker";
 
 interface Props {
   navigation: any;
@@ -131,6 +132,7 @@ class OpenScreen extends React.Component<Props> {
         {this.showDeleteIcon()}
         <ScrollView>
           <Header
+            changeLocation={null}
             locationName=""
             navigation={this.props.navigation}
             command={this.create}
@@ -168,6 +170,7 @@ class OpenScreen extends React.Component<Props> {
               placeholder="What type of service you want ?"
             ></TextInput>
           </View>
+          <TimePikerComponent></TimePikerComponent>
           <Text style={[styles.marginTop, styles.text, styles.marginBottom]}>
             Upload photos of your space
           </Text>
