@@ -1,11 +1,12 @@
 import React from "react";
 import { styles } from "./styles";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import { Text, View } from "native-base";
 import {
   NativeSyntheticEvent,
   NativeScrollEvent,
-  InteractionManager
+  InteractionManager,
+  Dimensions
 } from "react-native";
 
 interface Props {}
@@ -13,18 +14,19 @@ interface Props {}
 export default class TimePikerComponent extends React.Component<Props> {
   state = {
     time: [],
-    selected: 1
+    selected: 10,
+    scrolling: false,
+    display: [],
+    inverted: false
   };
-  scrollViewRef: any;
+  flatListRef: any;
 
   componentWillMount() {
-    const initial = "7:00";
-    let aux = "7:30";
+    const initial = "4:00";
+    let aux = "4:30";
     let moment = "am";
     const time = [];
     let clock = 1;
-    time.push("");
-    time.push("");
     time.push(initial + moment);
     time.push(aux + moment);
     while (clock < 25) {
@@ -35,7 +37,7 @@ export default class TimePikerComponent extends React.Component<Props> {
         minutes = 0;
         hour = hour === 12 ? 1 : hour + 1;
         if (hour >= 12) {
-          moment === 'am' ? moment = 'pm' : moment= 'am';
+          moment === "am" ? (moment = "pm") : (moment = "am");
         }
         clock += 1;
       }
@@ -44,70 +46,116 @@ export default class TimePikerComponent extends React.Component<Props> {
         time.push(aux);
       }
     }
-    time.push("");
-    time.push("");
-    this.setState({ time: time });
+    this.setState({
+      time: time,
+      display: [...time.slice(0, 20)]
+    });
+  }
+
+  getItemLayout = (data, index) => {
+    const elementWidth = 90;
+    const middle = Dimensions.get("screen").width / 2;
+    const offset = middle - elementWidth / 2;
+    return {
+      length: elementWidth,
+      offset: index * elementWidth - offset,
+      index
+    };
+  };
+
+  waitToUpdateList(newLength: number, index: number) {
+    if (this.state.display.length !== newLength) {
+      setTimeout(this.waitToUpdateList.bind(this, newLength, index), 500);
+    } else {
+      InteractionManager.runAfterInteractions(() => {
+        this.flatListRef.scrollToIndex({
+          index: Math.round(index)
+        });
+      });
+      this.setState({ selected: index, scrolling: false });
+    }
   }
 
   render() {
     return (
-      <ScrollView
-      contentContainerStyle={{height: 100}}
-        decelerationRate={0.25}
+      <FlatList
+        contentContainerStyle={{ height: 100 }}
+        initialScrollIndex={10}
+        getItemLayout={this.getItemLayout.bind(this)}
+        decelerationRate={0.01}
+        scrollEnabled={!this.state.scrolling}
         horizontal
-        snapToAlignment={"center"}
+        initialNumToRender={this.state.display.length}
+        inverted={this.state.inverted}
         showsHorizontalScrollIndicator={false}
-        ref={ref => (this.scrollViewRef = ref)}
+        ref={ref => (this.flatListRef = ref)}
+        data={this.state.display}
+        renderItem={({ item, index }) => this.renderItem(item, index)}
+        keyExtractor={(item, index) => this.state.time.length + "_" + index}
+        onMomentumScrollBegin={() => this.setState({ scrolling: true })}
         onMomentumScrollEnd={(
           event: NativeSyntheticEvent<NativeScrollEvent>
         ) => {
-          const totalSize = event.nativeEvent.contentSize.width;
-          const index =
+          const elementWidth = 90;
+          const totalSize = elementWidth * this.state.time.length;
+          let index = Math.round(
             (this.state.time.length * event.nativeEvent.contentOffset.x) /
               totalSize +
-            1.5;
-          const middle = event.nativeEvent.layoutMeasurement.width / 2;
-          const elementWidth = 90;
-          const offset = middle - elementWidth / 2;
-          this.setState({ selected: Math.round(index) });
-          InteractionManager.runAfterInteractions(() => {
-            this.scrollViewRef.scrollTo({
-              x: Math.round(index) * elementWidth - offset,
-              y: 0,
-              animated: false
+              1.5
+          );
+          if (index + 6 >= this.state.display.length) {
+            const from =
+              this.state.display.length >= this.state.time.length
+                ? 0
+                : this.state.display.length;
+            const newArray = [
+              ...this.state.display,
+              ...this.state.time.slice(from, this.state.time.length)
+            ];
+            this.setState({
+              display: newArray
             });
-          });
+            this.waitToUpdateList(newArray.length, index);
+          } else if (index - 3 <= 0) {
+            const newArray = [
+              ...this.state.time.slice(0, this.state.time.length),
+              ...this.state.display
+            ];
+            this.setState({
+              display: newArray
+            });
+            index = this.state.time.length + index;
+            this.waitToUpdateList(newArray.length, index);
+          } else {
+            this.waitToUpdateList(this.state.display.length, index);
+          }
         }}
-      >
-        {this.renderItem()}
-      </ScrollView>
+      ></FlatList>
     );
   }
 
-  renderItem() {
-    return this.state.time.map((item, index) => {
-      const moment = item.substring(item.length - 2, item.length);
-      const time = item.substring(0, item.length - 2);
-      return (
-        <View style={styles.container} key={index}>
-          <Text
-            style={
-              this.state.selected === index ? styles.selectedText : styles.text
-            }
-          >
-            {time}
-          </Text>
-          <Text
-            style={
-              this.state.selected === index
-                ? styles.smallSelectedText
-                : styles.smallText
-            }
-          >
-            {moment}
-          </Text>
-        </View>
-      );
-    });
+  renderItem(item: string, index: number) {
+    const moment = item.substring(item.length - 2, item.length);
+    const time = item.substring(0, item.length - 2);
+    return (
+      <View style={styles.container} key={index}>
+        <Text
+          style={
+            this.state.selected === index ? styles.selectedText : styles.text
+          }
+        >
+          {time}
+        </Text>
+        <Text
+          style={
+            this.state.selected === index
+              ? styles.smallSelectedText
+              : styles.smallText
+          }
+        >
+          {moment}
+        </Text>
+      </View>
+    );
   }
 }

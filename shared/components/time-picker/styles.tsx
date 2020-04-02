@@ -6,34 +6,33 @@ const entireScreenWidth = Dimensions.get("window").width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 
 export const styles = EStyleSheet.create({
-    list: {
-        flex: 1
-    },
     text: {
         fontSize: 20,
         fontFamily: "quicksand-bold",
-        color: "#DDDDDD"
+        color: "#DDDDDD",
+        lineHeight: 20
     },
     smallText: {
         fontSize: 16,
         fontFamily: "quicksand-bold",
-        color: "#DDDDDD"
+        color: "#DDDDDD",
+        lineHeight: 16
     },
     selectedText: {
-        fontSize: 24,
+        fontSize: 30,
         fontFamily: "quicksand-bold",
         color: "#5A646B",
-        alignItems: "flex-end"
+        lineHeight: 30
     },
     smallSelectedText: {
         fontSize: 18,
         fontFamily: "quicksand-bold",
         color: "#5A646B",
-        alignItems: "flex-start"
+        lineHeight: 18
     },
     container: {
         width: 90,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     }
 });
