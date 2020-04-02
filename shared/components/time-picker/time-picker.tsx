@@ -14,10 +14,9 @@ interface Props {}
 export default class TimePikerComponent extends React.Component<Props> {
   state = {
     time: [],
-    selected: 10,
+    selected: 20,
     scrolling: false,
-    display: [],
-    inverted: false
+    display: []
   };
   flatListRef: any;
 
@@ -81,13 +80,12 @@ export default class TimePikerComponent extends React.Component<Props> {
       <View style={{flex: 1, marginHorizontal: 20 }}>
         <FlatList
           contentContainerStyle={{ height: 65 }}
-          initialScrollIndex={10}
+          initialScrollIndex={20}
           getItemLayout={this.getItemLayout.bind(this)}
           decelerationRate={0.1}
           scrollEnabled={!this.state.scrolling}
           horizontal
           initialNumToRender={this.state.display.length}
-          inverted={this.state.inverted}
           showsHorizontalScrollIndicator={false}
           ref={ref => (this.flatListRef = ref)}
           data={this.state.display}
