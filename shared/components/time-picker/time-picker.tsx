@@ -82,8 +82,7 @@ export default class TimePikerComponent extends React.Component<Props> {
           contentContainerStyle={{ height: 65 }}
           initialScrollIndex={20}
           getItemLayout={this.getItemLayout.bind(this)}
-          decelerationRate={0.1}
-          scrollEnabled={!this.state.scrolling}
+          decelerationRate={0.5}
           horizontal
           initialNumToRender={this.state.display.length}
           showsHorizontalScrollIndicator={false}
@@ -133,8 +132,7 @@ export default class TimePikerComponent extends React.Component<Props> {
         <View
           style={{
             backgroundColor: "#707070",
-            height: 0.3,
-            marginTop: 10
+            height: 0.3
           }}
         ></View>
       </View>

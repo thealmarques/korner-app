@@ -34,5 +34,6 @@ export const styles = EStyleSheet.create({
         width: 90,
         justifyContent: "flex-end",
         alignItems: "center",
+        marginBottom: 10
     }
 });
