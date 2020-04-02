@@ -19,10 +19,10 @@ export const styles = EStyleSheet.create({
         lineHeight: 16
     },
     selectedText: {
-        fontSize: 30,
+        fontSize: 27,
         fontFamily: "quicksand-bold",
         color: "#5A646B",
-        lineHeight: 30
+        lineHeight: 27
     },
     smallSelectedText: {
         fontSize: 18,
@@ -32,7 +32,7 @@ export const styles = EStyleSheet.create({
     },
     container: {
         width: 90,
-        justifyContent: "center",
+        justifyContent: "flex-end",
         alignItems: "center",
     }
 });

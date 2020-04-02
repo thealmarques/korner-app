@@ -29,7 +29,7 @@ export default class TimePikerComponent extends React.Component<Props> {
     let clock = 1;
     time.push(initial + moment);
     time.push(aux + moment);
-    while (clock < 25) {
+    while (clock <= 24) {
       let split = aux.split(":");
       let hour = parseInt(split[0], 10);
       let minutes = parseInt(split[1], 10) + 30;
@@ -48,13 +48,13 @@ export default class TimePikerComponent extends React.Component<Props> {
     }
     this.setState({
       time: time,
-      display: [...time.slice(0, 20)]
+      display: [...time.slice(0, 30)]
     });
   }
 
   getItemLayout = (data, index) => {
     const elementWidth = 90;
-    const middle = Dimensions.get("screen").width / 2;
+    const middle = (Dimensions.get("screen").width - 20 * 2) / 2;
     const offset = middle - elementWidth / 2;
     return {
       length: elementWidth,
@@ -78,59 +78,68 @@ export default class TimePikerComponent extends React.Component<Props> {
 
   render() {
     return (
-      <FlatList
-        contentContainerStyle={{ height: 100 }}
-        initialScrollIndex={10}
-        getItemLayout={this.getItemLayout.bind(this)}
-        decelerationRate={0.01}
-        scrollEnabled={!this.state.scrolling}
-        horizontal
-        initialNumToRender={this.state.display.length}
-        inverted={this.state.inverted}
-        showsHorizontalScrollIndicator={false}
-        ref={ref => (this.flatListRef = ref)}
-        data={this.state.display}
-        renderItem={({ item, index }) => this.renderItem(item, index)}
-        keyExtractor={(item, index) => this.state.time.length + "_" + index}
-        onMomentumScrollBegin={() => this.setState({ scrolling: true })}
-        onMomentumScrollEnd={(
-          event: NativeSyntheticEvent<NativeScrollEvent>
-        ) => {
-          const elementWidth = 90;
-          const totalSize = elementWidth * this.state.time.length;
-          let index = Math.round(
-            (this.state.time.length * event.nativeEvent.contentOffset.x) /
-              totalSize +
-              1.5
-          );
-          if (index + 6 >= this.state.display.length) {
-            const from =
-              this.state.display.length >= this.state.time.length
-                ? 0
-                : this.state.display.length;
-            const newArray = [
-              ...this.state.display,
-              ...this.state.time.slice(from, this.state.time.length)
-            ];
-            this.setState({
-              display: newArray
-            });
-            this.waitToUpdateList(newArray.length, index);
-          } else if (index - 3 <= 0) {
-            const newArray = [
-              ...this.state.time.slice(0, this.state.time.length),
-              ...this.state.display
-            ];
-            this.setState({
-              display: newArray
-            });
-            index = this.state.time.length + index;
-            this.waitToUpdateList(newArray.length, index);
-          } else {
-            this.waitToUpdateList(this.state.display.length, index);
-          }
-        }}
-      ></FlatList>
+      <View style={{flex: 1, marginHorizontal: 20 }}>
+        <FlatList
+          contentContainerStyle={{ height: 65 }}
+          initialScrollIndex={10}
+          getItemLayout={this.getItemLayout.bind(this)}
+          decelerationRate={0.1}
+          scrollEnabled={!this.state.scrolling}
+          horizontal
+          initialNumToRender={this.state.display.length}
+          inverted={this.state.inverted}
+          showsHorizontalScrollIndicator={false}
+          ref={ref => (this.flatListRef = ref)}
+          data={this.state.display}
+          renderItem={({ item, index }) => this.renderItem(item, index)}
+          keyExtractor={(item, index) => this.state.time.length + "_" + index}
+          onMomentumScrollBegin={() => this.setState({ scrolling: true })}
+          onMomentumScrollEnd={(
+            event: NativeSyntheticEvent<NativeScrollEvent>
+          ) => {
+            const elementWidth = 90;
+            const totalSize = elementWidth * this.state.time.length;
+            let index = Math.round(
+              (this.state.time.length * event.nativeEvent.contentOffset.x) /
+                totalSize +
+                1.5
+            );
+            if (index + 3 >= this.state.display.length) {
+              const from =
+                this.state.display.length >= this.state.time.length
+                  ? 0
+                  : this.state.display.length;
+              const newArray = [
+                ...this.state.display,
+                ...this.state.time.slice(from, this.state.time.length)
+              ];
+              this.setState({
+                display: newArray
+              });
+              this.waitToUpdateList(newArray.length, index);
+            } else if (index - 3 <= 0) {
+              const newArray = [
+                ...this.state.time.slice(0, this.state.time.length),
+                ...this.state.display
+              ];
+              this.setState({
+                display: newArray
+              });
+              index = this.state.time.length + index;
+              this.waitToUpdateList(newArray.length, index);
+            } else {
+              this.waitToUpdateList(this.state.display.length, index);
+            }
+          }}
+        ></FlatList>
+        <View
+          style={{
+            backgroundColor: "#707070",
+            height: 0.3,
+            marginTop: 10
+          }}
+        ></View>
+      </View>
     );
   }
 
