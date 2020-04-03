@@ -9,18 +9,13 @@ import {
   State
 } from "react-native-gesture-handler";
 import { styles } from "./styles";
-import {
-  SafeAreaView,
-  Image,
-  Animated,
-  Dimensions
-} from "react-native";
+import { SafeAreaView, Image, Animated, Dimensions } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import { saveMarker, storeImages } from "../../shared/api/api";
 import * as ImagePicker from "expo-image-picker";
-import { BackHandler } from 'react-native';
-import { convertUriToBlob, convertToBase64 } from '../../shared/Helper';
+import { BackHandler } from "react-native";
+import { convertUriToBlob, convertToBase64 } from "../../shared/Helper";
 import TimePikerComponent from "../../shared/components/time-picker/time-picker";
 
 interface Props {
@@ -30,6 +25,9 @@ interface Props {
 class OpenScreen extends React.Component<Props> {
   scrollViewRef = null;
   point = [];
+  days = ["S", "M", "T", "W", "T", "F", "S"];
+  lastOpen = 5;
+  lastClose = 5;
   state = {
     selectedCategory: "1",
     selectedSubCategory: "1",
@@ -38,7 +36,9 @@ class OpenScreen extends React.Component<Props> {
     blobImages: [],
     base64Images: [],
     showDelete: false,
-    location: this.props.navigation.state.params.location
+    location: this.props.navigation.state.params.location,
+    schedule: new Array(7).fill(false),
+    selectedDay: -1
   };
 
   create = {
@@ -71,7 +71,10 @@ class OpenScreen extends React.Component<Props> {
   constructor(props) {
     super(props);
     this.scrollViewRef = React.createRef();
-    BackHandler.addEventListener('hardwareBackPress', this.onBackHandler.bind(this));
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.onBackHandler.bind(this)
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,9 +84,9 @@ class OpenScreen extends React.Component<Props> {
       });
     }
   }
-  
+
   onBackHandler() {
-      this.resetState();
+    this.resetState();
   }
 
   resetState() {
@@ -170,7 +173,12 @@ class OpenScreen extends React.Component<Props> {
               placeholder="What type of service you want ?"
             ></TextInput>
           </View>
-          <TimePikerComponent></TimePikerComponent>
+          <Text style={[styles.marginTop, styles.text, styles.marginBottom]}>
+            Schedule
+          </Text>
+          <View style={[styles.uploadContainer, styles.marginTop]}>
+            {this.renderDays()}
+          </View>
           <Text style={[styles.marginTop, styles.text, styles.marginBottom]}>
             Upload photos of your space
           </Text>
@@ -190,8 +198,28 @@ class OpenScreen extends React.Component<Props> {
             </TouchableWithoutFeedback>
           </View>
         </ScrollView>
+        {this.pickSchedule()}
       </SafeAreaView>
     );
+  }
+
+  renderDays() {
+    return this.days.map((day, index) => {
+      return (
+        <TouchableWithoutFeedback
+          onPress={() => this.setState({ selectedDay: index })}
+          key={"day_" + index}
+          style={[
+            styles.dayContainer,
+            this.state.schedule[index]
+              ? styles.daySelected
+              : styles.dayNotSelected
+          ]}
+        >
+          <Text style={styles.dayText}>{day}</Text>
+        </TouchableWithoutFeedback>
+      );
+    });
   }
 
   imagePicker() {
@@ -210,6 +238,37 @@ class OpenScreen extends React.Component<Props> {
         }
       }
     });
+  }
+
+  pickSchedule() {
+    if (this.state.selectedDay > 0) {
+      return (
+        <View style={[styles.schedulePickerContainer, styles.shadowSchedule]}>
+          <View style={{ flex: 1 }}>
+            <TouchableWithoutFeedback
+              onPress={() => this.setState({ selectedDay: -1 })}
+            >
+              <Image
+                style={styles.leftArrow}
+                source={require("../../shared/assets/left-arrow-grey.png")}
+              ></Image>
+            </TouchableWithoutFeedback>
+            <Text style={[styles.smallText]}>Open from</Text>
+            <TimePikerComponent></TimePikerComponent>
+            <Text style={[styles.smallText, styles.smallTextMarginTop]}>Until</Text>
+            <TimePikerComponent></TimePikerComponent>
+            <TouchableWithoutFeedback
+              onPress={() => alert('yes')}
+            >
+              <Image
+                style={styles.approve}
+                source={require("../../shared/assets/approve.png")}
+              ></Image>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+      );
+    }
   }
 
   onHandlerStateChange({ nativeEvent }, index) {
@@ -273,7 +332,7 @@ class OpenScreen extends React.Component<Props> {
   getUploadedImages() {
     this.point = new Array();
     return this.state.base64Images.map((base64, index) => {
-      this.point[index] = new Animated.ValueXY(); 
+      this.point[index] = new Animated.ValueXY();
       return (
         <PanGestureHandler
           onGestureEvent={this._onPanGestureEvent(index)}

@@ -125,8 +125,8 @@ export const styles = EStyleSheet.create({
   },
   uploadContainer: {
     paddingHorizontal: "10rem",
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     flex: 1,
     margin: "auto"
   },
@@ -134,8 +134,8 @@ export const styles = EStyleSheet.create({
     backgroundColor: "white",
     width: "90rem",
     height: "85rem",
-    justifyContent: 'space-between',
-    alignItems: "center",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   browseImage: {
     height: "40rem",
@@ -149,7 +149,7 @@ export const styles = EStyleSheet.create({
     borderTopRightRadius: "5rem",
     backgroundColor: "#BBC5CC",
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
     width: "90rem",
     paddingVertical: "3rem",
     margin: 0
@@ -167,6 +167,70 @@ export const styles = EStyleSheet.create({
   },
   deleteIcon: {
     width: "35rem",
-    height: "35rem",
+    height: "35rem"
+  },
+  dayContainer: {
+    width: "30rem",
+    height: "30rem",
+    borderRadius: "25rem",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: "12rem",
+    marginTop: "5rem",
+    marginBottom: "5rem"
+  },
+  dayText: {
+    fontFamily: "quicksand-bold",
+    color: "white",
+    fontSize: "12rem"
+  },
+  dayNotSelected: {
+    backgroundColor: "#DDDDDD"
+  },
+  daySelected: {
+    backgroundColor: "#5A646B"
+  },
+  schedulePickerContainer: {
+    position: "absolute",
+    bottom: 0,
+    justifyContent: "flex-end",
+    height: "50%",
+    width: "100%",
+    backgroundColor: "white",
+    elevation: 2,
+    flexDirection: "column"
+  },
+  shadowSchedule: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.00,
+    elevation: 24,
+  },
+  leftArrow: {
+    height: '20rem',
+    width: '25rem',
+    resizeMode: 'contain',
+    marginLeft: '25rem',
+    marginTop: '25rem'
+  },
+  approve: {
+    height: '35rem',
+    width: '35rem',
+    resizeMode: 'contain',
+    marginTop: '20rem',
+    alignSelf: 'center'
+   },
+  smallText: {
+    alignSelf: 'center',
+    fontFamily: "quicksand-bold",
+    color: "#5A646B",
+    fontSize: "14rem"
+  },
+  smallTextMarginTop: {
+    marginTop: "16rem"
   }
 });

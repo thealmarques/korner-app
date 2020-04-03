@@ -53,7 +53,7 @@ export default class TimePikerComponent extends React.Component<Props> {
 
   getItemLayout = (data, index) => {
     const elementWidth = 90;
-    const middle = (Dimensions.get("screen").width - 20 * 2) / 2;
+    const middle = (Dimensions.get("screen").width - 15 * 2) / 2;
     const offset = middle - elementWidth / 2;
     return {
       length: elementWidth,
@@ -77,12 +77,12 @@ export default class TimePikerComponent extends React.Component<Props> {
 
   render() {
     return (
-      <View style={{flex: 1, marginHorizontal: 20 }}>
+      <View style={{marginHorizontal: 15, height: 65, width: "100%", justifyContent: "center", alignItems: "center"  }}>
         <FlatList
-          contentContainerStyle={{ height: 65 }}
+          directionalLockEnabled={true}
           initialScrollIndex={20}
           getItemLayout={this.getItemLayout.bind(this)}
-          decelerationRate={0.5}
+          decelerationRate={'fast'}
           horizontal
           initialNumToRender={this.state.display.length}
           showsHorizontalScrollIndicator={false}
@@ -129,12 +129,6 @@ export default class TimePikerComponent extends React.Component<Props> {
             }
           }}
         ></FlatList>
-        <View
-          style={{
-            backgroundColor: "#707070",
-            height: 0.3
-          }}
-        ></View>
       </View>
     );
   }
