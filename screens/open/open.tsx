@@ -6,7 +6,7 @@ import {
   TextInput,
   FlatList,
   PanGestureHandler,
-  State
+  State,
 } from "react-native-gesture-handler";
 import { styles } from "./styles";
 import { SafeAreaView, Image, Animated, Dimensions } from "react-native";
@@ -38,7 +38,7 @@ class OpenScreen extends React.Component<Props> {
     showDelete: false,
     location: this.props.navigation.state.params.location,
     schedule: new Array(7).fill(false),
-    selectedDay: -1
+    selectedDay: -1,
   };
 
   create = {
@@ -55,17 +55,17 @@ class OpenScreen extends React.Component<Props> {
         this.state.distance,
         "open"
       )
-        .then(doc => {
+        .then((doc) => {
           storeImages(doc.id, this.state.blobImages);
           this.props.navigation.navigate("Home", {
-            event: "create"
+            event: "create",
           });
           this.resetState();
         })
-        .catch(error => {
+        .catch((error) => {
           alert(error.message);
         });
-    }
+    },
   };
 
   constructor(props) {
@@ -80,7 +80,7 @@ class OpenScreen extends React.Component<Props> {
   componentWillReceiveProps(nextProps) {
     if (nextProps.navigation.state.params.location) {
       this.setState({
-        location: nextProps.navigation.state.params.location
+        location: nextProps.navigation.state.params.location,
       });
     }
   }
@@ -98,7 +98,7 @@ class OpenScreen extends React.Component<Props> {
       blobImages: [],
       base64Images: [],
       showDelete: false,
-      location: this.props.navigation.state.params.location
+      location: this.props.navigation.state.params.location,
     });
   }
 
@@ -117,7 +117,7 @@ class OpenScreen extends React.Component<Props> {
             justifyContent: "center",
             alignItems: "center",
             height: "10%",
-            elevation: 3
+            elevation: 3,
           }}
         >
           <Image
@@ -165,9 +165,9 @@ class OpenScreen extends React.Component<Props> {
             <TextInput
               style={[styles.textInput]}
               value={this.state.description}
-              onChangeText={text =>
+              onChangeText={(text) =>
                 this.setState({
-                  description: text
+                  description: text,
                 })
               }
               placeholder="What type of service you want ?"
@@ -213,7 +213,7 @@ class OpenScreen extends React.Component<Props> {
             styles.dayContainer,
             this.state.schedule[index]
               ? styles.daySelected
-              : styles.dayNotSelected
+              : styles.dayNotSelected,
           ]}
         >
           <Text style={styles.dayText}>{day}</Text>
@@ -224,7 +224,7 @@ class OpenScreen extends React.Component<Props> {
 
   imagePicker() {
     ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
     }).then(async (result: any) => {
       if (!result.cancelled) {
         const { height, width, type, uri } = result;
@@ -233,7 +233,7 @@ class OpenScreen extends React.Component<Props> {
           const base64 = await convertToBase64(blob);
           this.setState({
             blobImages: this.state.blobImages.concat([blob]),
-            base64Images: this.state.base64Images.concat([base64])
+            base64Images: this.state.base64Images.concat([base64]),
           });
         }
       }
@@ -254,12 +254,34 @@ class OpenScreen extends React.Component<Props> {
               ></Image>
             </TouchableWithoutFeedback>
             <Text style={[styles.smallText]}>Open from</Text>
-            <TimePikerComponent></TimePikerComponent>
-            <Text style={[styles.smallText, styles.smallTextMarginTop]}>Until</Text>
-            <TimePikerComponent></TimePikerComponent>
-            <TouchableWithoutFeedback
-              onPress={() => alert('yes')}
-            >
+            <TimePikerComponent
+              selectedIndex={15}
+              height={75}
+              timeInterval={30}
+              marginHorizontal={0}
+              enabled={true}
+              initialNumToRender={25}
+              onChange={(val) => {}}
+              visibleElements={4}
+              mainColor={'#5A646B'}
+              secondaryColor={'#DDDDDD'}
+              fontSize={27}
+              fontFamily={'quicksand-bold'}
+            ></TimePikerComponent>
+            <Text style={[styles.smallText, styles.smallTextMarginTop]}>
+              Until
+            </Text>
+            {/*<TimePikerComponent
+              selectedIndex={15}
+              height={75}
+              timeInterval={30}
+              marginHorizontal={15}
+              enabled={false}
+              initialNumToRender={25}
+              visibleElements={3}
+              onChange={(val) => console.log(val)}
+            ></TimePikerComponent>*/}
+            <TouchableWithoutFeedback onPress={() => alert("yes")}>
               <Image
                 style={styles.approve}
                 source={require("../../shared/assets/approve.png")}
@@ -300,31 +322,31 @@ class OpenScreen extends React.Component<Props> {
           this.setState({
             base64Images: auxBase64,
             showDelete: false,
-            blobImages: auxBlob
+            blobImages: auxBlob,
           });
         }
       } else {
         Animated.spring(this.point[index], { toValue: { x: 0, y: 0 } }).start();
         this.setState({
-          showDelete: false
+          showDelete: false,
         });
       }
     } else {
       this.setState({
-        showDelete: true
+        showDelete: true,
       });
     }
   }
 
-  _onPanGestureEvent = index =>
+  _onPanGestureEvent = (index) =>
     Animated.event(
       [
         {
           nativeEvent: {
             translationX: this.point[index].x,
-            translationY: this.point[index].y
-          }
-        }
+            translationY: this.point[index].y,
+          },
+        },
       ],
       { useNativeDriver: false }
     );
@@ -348,9 +370,9 @@ class OpenScreen extends React.Component<Props> {
               {
                 transform: [
                   { translateY: this.point[index].y },
-                  { translateX: this.point[index].x }
-                ]
-              }
+                  { translateX: this.point[index].x },
+                ],
+              },
             ]}
           >
             <Image
@@ -371,7 +393,7 @@ class OpenScreen extends React.Component<Props> {
         style={[
           styles.categoriesContainer,
           styles.shadow,
-          this.state.selectedCategory === category.id ? styles.selected : ""
+          this.state.selectedCategory === category.id ? styles.selected : "",
         ]}
       >
         <TouchableWithoutFeedback
@@ -379,12 +401,12 @@ class OpenScreen extends React.Component<Props> {
           onPress={() => {
             this.setState({
               selectedCategory: category.id,
-              selectedSubCategory: "1"
+              selectedSubCategory: "1",
             });
             this.scrollViewRef.current.scrollTo({
               animated: false,
               x: 0,
-              y: 0
+              y: 0,
             });
           }}
         >
@@ -398,7 +420,7 @@ class OpenScreen extends React.Component<Props> {
   renderSubCategories() {
     const subcategories =
       categories[parseInt(this.state.selectedCategory, 10) - 1].subcategories;
-    return subcategories.map(subcategory => {
+    return subcategories.map((subcategory) => {
       if (subcategory.id === "1") {
         return (
           <View
@@ -408,14 +430,14 @@ class OpenScreen extends React.Component<Props> {
               this.state.selectedSubCategory === subcategory.id
                 ? styles.selected
                 : "",
-              styles.shadow
+              styles.shadow,
             ]}
           >
             <TouchableWithoutFeedback
               style={styles.touchableSubCategory}
               onPress={() => {
                 this.setState({
-                  selectedSubCategory: subcategory.id
+                  selectedSubCategory: subcategory.id,
                 });
               }}
             >
@@ -433,14 +455,14 @@ class OpenScreen extends React.Component<Props> {
             styles.shadow,
             this.state.selectedSubCategory === subcategory.id
               ? styles.selected
-              : ""
+              : "",
           ]}
         >
           <TouchableWithoutFeedback
             style={[styles.touchableMiniCategory, styles.row]}
             onPress={() => {
               this.setState({
-                selectedSubCategory: subcategory.id
+                selectedSubCategory: subcategory.id,
               });
             }}
           >

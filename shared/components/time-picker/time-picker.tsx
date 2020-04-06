@@ -1,5 +1,4 @@
 import React from "react";
-import { styles } from "./styles";
 import { FlatList } from "react-native-gesture-handler";
 import { Text, View } from "native-base";
 import {
@@ -9,27 +8,39 @@ import {
   Dimensions
 } from "react-native";
 
-interface Props {}
+interface Props {
+  onChange: any;
+  selectedIndex: number;
+  timeInterval: number;
+  initialNumToRender: number;
+  enabled: boolean;
+  height: number;
+  marginHorizontal: number;
+  visibleElements: number;
+  mainColor: string;
+  secondaryColor: string;
+  fontSize: number;
+  fontFamily: string;
+}
 
 export default class TimePikerComponent extends React.Component<Props> {
   state = {
     time: [],
-    selected: 20,
+    selected: this.props.selectedIndex,
     scrolling: false,
     display: []
   };
   flatListRef: any;
+  elementWidth: number;
 
   componentWillMount() {
-    const initial = "4:00";
-    let aux = "4:30";
+    let temp = "4:00";
     let moment = "am";
     const time = [];
     let clock = 1;
-    time.push(initial + moment);
-    time.push(aux + moment);
+    time.push(temp + moment);
     while (clock <= 24) {
-      let split = aux.split(":");
+      let split = temp.split(":");
       let hour = parseInt(split[0], 10);
       let minutes = parseInt(split[1], 10) + 30;
       if (minutes >= 60) {
@@ -40,24 +51,24 @@ export default class TimePikerComponent extends React.Component<Props> {
         }
         clock += 1;
       }
-      aux = hour + ":" + (minutes === 0 ? "00" : minutes) + moment;
+      temp = hour + ":" + (minutes === 0 ? "00" : minutes) + moment;
       if (clock <= 24) {
-        time.push(aux);
+        time.push(temp);
       }
     }
     this.setState({
       time: time,
-      display: [...time.slice(0, 30)]
+      display: [...time.slice(0, this.props.initialNumToRender)]
     });
+    this.elementWidth = Dimensions.get("screen").width / this.props.visibleElements;
   }
 
   getItemLayout = (data, index) => {
-    const elementWidth = 90;
-    const middle = (Dimensions.get("screen").width - 15 * 2) / 2;
-    const offset = middle - elementWidth / 2;
+    const middle = (Dimensions.get("screen").width - this.props.marginHorizontal * 2) / 2;
+    const offset = middle - (this.elementWidth / 2);
     return {
-      length: elementWidth,
-      offset: index * elementWidth - offset,
+      length: this.elementWidth,
+      offset: (index * this.elementWidth) - offset,
       index
     };
   };
@@ -72,17 +83,19 @@ export default class TimePikerComponent extends React.Component<Props> {
         });
       });
       this.setState({ selected: index, scrolling: false });
+      this.props.onChange(this.state.display[index]);
     }
   }
 
   render() {
     return (
-      <View style={{marginHorizontal: 15, height: 65, width: "100%", justifyContent: "center", alignItems: "center"  }}>
+      <View style={{marginHorizontal: this.props.marginHorizontal, height: this.props.height, width: "100%", justifyContent: "center", alignItems: "center"  }}>
         <FlatList
           directionalLockEnabled={true}
-          initialScrollIndex={20}
+          initialScrollIndex={this.props.selectedIndex}
           getItemLayout={this.getItemLayout.bind(this)}
           decelerationRate={'fast'}
+          scrollEnabled={this.props.enabled}
           horizontal
           initialNumToRender={this.state.display.length}
           showsHorizontalScrollIndicator={false}
@@ -94,8 +107,7 @@ export default class TimePikerComponent extends React.Component<Props> {
           onMomentumScrollEnd={(
             event: NativeSyntheticEvent<NativeScrollEvent>
           ) => {
-            const elementWidth = 90;
-            const totalSize = elementWidth * this.state.time.length;
+            const totalSize = this.elementWidth * this.state.time.length;
             let index = Math.round(
               (this.state.time.length * event.nativeEvent.contentOffset.x) /
                 totalSize +
@@ -137,10 +149,24 @@ export default class TimePikerComponent extends React.Component<Props> {
     const moment = item.substring(item.length - 2, item.length);
     const time = item.substring(0, item.length - 2);
     return (
-      <View style={styles.container} key={index}>
+      <View style={{
+        width: this.elementWidth,
+        justifyContent: "flex-end",
+        alignItems: "center"
+      }} key={index}>
         <Text
           style={
-            this.state.selected === index ? styles.selectedText : styles.text
+            this.state.selected === index ? {
+              fontSize: this.props.fontSize,
+              fontFamily: this.props.fontFamily,
+              color: this.props.mainColor,
+              lineHeight: this.props.fontSize
+            } : {
+              fontSize: this.props.fontSize - 7,
+              fontFamily: this.props.fontFamily,
+              color: this.props.secondaryColor,
+              lineHeight: this.props.fontSize - 7
+            }
           }
         >
           {time}
@@ -148,8 +174,18 @@ export default class TimePikerComponent extends React.Component<Props> {
         <Text
           style={
             this.state.selected === index
-              ? styles.smallSelectedText
-              : styles.smallText
+              ? {
+                fontSize: this.props.fontSize - 9,
+                fontFamily: this.props.fontFamily,
+                color: this.props.mainColor,
+                lineHeight: this.props.fontSize - 9
+              }
+              : {
+                fontSize: this.props.fontSize - 11,
+                fontFamily: this.props.fontFamily,
+                color: this.props.secondaryColor,
+                lineHeight: this.props.fontSize - 11
+              }
           }
         >
           {moment}
