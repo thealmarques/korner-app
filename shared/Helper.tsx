@@ -49,14 +49,7 @@ export async function getLocation() {
       latitude: coordinates.latitude,
       longitude: coordinates.longitude
     });
-    const name =
-      nameObj[0].street +
-      " " +
-      nameObj[0].name +
-      ", " +
-      nameObj[0].city +
-      ", " +
-      nameObj[0].country;
+    const name = 'test';
     resolve({
       coordinates,
       name

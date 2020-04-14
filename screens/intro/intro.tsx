@@ -1,92 +1,95 @@
 import React from "react";
-import { Text, View, Image, Alert, TouchableOpacity } from "react-native";
-import * as Font from "expo-font";
-import { styles } from "./styles";
 import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  Alert,
+  KeyboardAvoidingView,
+} from "react-native";
+import { styles } from "./styles";
+import InputComponent from "../../shared/components/input-form/input";
+import ButtonComponent from "../../shared/components/submit-button/button";
+import { ScrollView } from "react-native-gesture-handler";
+import * as firebase from "firebase";
 
 interface Props {
   navigation: any;
 }
 
 export default class IntroPage extends React.Component<Props> {
+  state = {
+    email: "",
+    password: "",
+  };
+
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Image source={require("../../shared/assets/logo.png")} />
-          <Text
-            style={{
-              marginTop: hp("2%"),
-              fontFamily: "quicksand-bold",
-              fontSize: wp("5%")
-            }}
+      <SafeAreaView style={styles.container}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.top}>
+            <Image
+              style={styles.logo}
+              source={require("../../shared/assets/logo.png")}
+            />
+            <Text style={styles.subtext}>
+              Missing a new shop around the korner ?
+            </Text>
+            <Text style={styles.mainText}>
+              Let the community know and keep track of what’s new.
+            </Text>
+          </View>
+          <KeyboardAvoidingView
+            style={styles.forms}
+            behavior="padding"
+            keyboardVerticalOffset={-80}
           >
-            Open for Business
-          </Text>
-          <Text
-            style={{
-              marginTop: hp("2%"),
-              fontFamily: "quicksand-regular",
-              fontSize: wp("3.5%"),
-              color: "#707070",
-              textAlign: "center"
-            }}
-          >
-            Missing an ice cream shop around the corner?{"\n"}
-            Wishing a new supermarket on a 1 mile radius?
-          </Text>
-        </View>
-        <View style={styles.middle}>
-          <Text
-            style={{
-              fontFamily: "quicksand-bold",
-              fontSize: wp("4%"),
-              color: "#707070"
-            }}
-          >
-            You are not alone...
-          </Text>
-          <Image
-            style={{ marginTop: hp("5%") }}
-            source={require("../../shared/assets/shops.png")}
-          />
-          <Text
-            style={{
-              marginTop: hp("2%"),
-              fontFamily: "quicksand-bold",
-              fontSize: wp("3%"),
-              color: "#707070",
-              textAlign: "center"
-            }}
-          >
-            Let the community know and keep track of what's new.
-          </Text>
-          <TouchableOpacity
-            style={styles.signInButton}
-            activeOpacity={0.9}
-            onPress={() => navigate("Register")}
-          >
-            <Text style={styles.buttonText}>Sign Up!</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.bottom}>
-          <Text
-            onPress={() => navigate("Login")}
-            style={{
-              color: "#7C766E",
-              textAlign: "center",
-              fontFamily: "quicksand-bold",
-              fontSize: wp("3.8%")
-            }}
-          >
-            Already have an account? Login
-          </Text>
-        </View>
-      </View>
+            <InputComponent
+              callback={(text) => this.setState({ email: text })}
+              label="Email"
+              placeholder="Enter your email"
+              password={false}
+              marginTop={"0rem"}
+            ></InputComponent>
+            <InputComponent
+              callback={(text) => this.setState({ password: text })}
+              label="Password"
+              placeholder="Enter your password"
+              password={true}
+              marginTop={"16rem"}
+            ></InputComponent>
+            <Text style={styles.forgot} onPress={() => alert("Coming soon")}>
+              Forgot password ?
+            </Text>
+          </KeyboardAvoidingView>
+          <View style={styles.bottom}>
+            <ButtonComponent
+              label="Log in"
+              callback={() => this.signIn()}
+              marginTop={0}
+            ></ButtonComponent>
+            <Text style={styles.smallText} onPress={() => navigate("Register")}>
+              Not a member ? Join now
+            </Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
+  }
+
+  signIn() {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .then(async (user) => {
+        this.props.navigation.navigate("App");
+      })
+      .catch((error) => {
+        Alert.alert("Error", error.message);
+      });
   }
 }

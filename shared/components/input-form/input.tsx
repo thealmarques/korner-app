@@ -1,48 +1,54 @@
 import React from "react";
-import * as Font from "expo-font";
-import { styles } from "./styles";
+import { Text, View, TextInput } from "react-native";
+import { Dimensions } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 
-import {
-    Text,
-    TextInput,
-    View
-  } from "react-native";
+const entireScreenWidth = Dimensions.get("window").width;
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 
 interface Props {
   label: string;
   placeholder: string;
   password: boolean;
-  marginTop: number;
+  marginTop: string;
   callback: any;
 }
 
 export default class InputComponent extends React.Component<Props> {
   state = {
-    fontsLoaded: false
+    behavior: "position",
   };
-  
-  async componentWillMount() {
-    await Font.loadAsync({
-      "quicksand-regular": require("../../assets/fonts/Quicksand-Regular.ttf"),
-      "quicksand-bold": require("../../assets/fonts/Quicksand-Bold.ttf")
-    });
-    this.setState({ fontsLoaded: true });
-  }
-
   render() {
-    if (this.state.fontsLoaded) {
-      return (
-        <View style={{marginTop: this.props.marginTop}}>
-          <Text style={styles.label}>
-            {this.props.label}
-          </Text>
-          <TextInput style={styles.input} secureTextEntry={this.props.password} 
-                     placeholder={this.props.placeholder} 
-                     onChangeText={text => this.props.callback(text)}></TextInput>
-        </View>
-      );
-    } else {
-      return <Text>Loading... (change to a loading page)</Text>;
-    }
+    return (
+      <View style={this.styles.marginTop}>
+        <Text style={this.styles.label}>{this.props.label}</Text>
+        <TextInput
+          style={this.styles.input}
+          secureTextEntry={this.props.password}
+          placeholder={this.props.placeholder}
+          placeholderTextColor={"#ADABAB"}
+          onChangeText={(text) => this.props.callback(text)}
+        ></TextInput>
+      </View>
+    );
   }
+  
+  styles = EStyleSheet.create({
+    label: {
+      color: "#6E6B6B",
+      fontSize: "14rem",
+      fontFamily: "quicksand-bold",
+    },
+    input: {
+      marginTop: "5rem",
+      paddingBottom: "2.5rem",
+      borderBottomWidth: "1rem",
+      borderBottomColor: "#ADABAB",
+      width: "100%",
+    },
+    marginTop: {
+      marginTop: this.props.marginTop
+    }
+  });
+  
 }

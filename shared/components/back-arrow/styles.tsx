@@ -6,17 +6,9 @@ const entireScreenWidth = Dimensions.get("window").width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 });
 
 export const styles = EStyleSheet.create({
-  text: {
-    color: "#FFFFFF",
-    fontSize: '14rem',
-    fontFamily: "quicksand-bold",
-    marginRight: '4%'
-  },
-  header: {
-    backgroundColor: "#C92C41",
-    height: '40rem',
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  }
+    arrow: {
+        width: '25rem',
+        height: '18rem',
+        resizeMode: 'contain'
+    }
 });

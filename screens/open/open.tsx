@@ -16,7 +16,7 @@ import { saveMarker, storeImages } from "../../shared/api/api";
 import * as ImagePicker from "expo-image-picker";
 import { BackHandler } from "react-native";
 import { convertUriToBlob, convertToBase64 } from "../../shared/Helper";
-import TimePikerComponent from "../../shared/components/time-picker/time-picker";
+import HorizontalTimePiker from "../../shared/components/time-picker/time-picker";
 
 interface Props {
   navigation: any;
@@ -254,33 +254,33 @@ class OpenScreen extends React.Component<Props> {
               ></Image>
             </TouchableWithoutFeedback>
             <Text style={[styles.smallText]}>Open from</Text>
-            <TimePikerComponent
+            <HorizontalTimePiker
               selectedIndex={15}
               height={75}
               timeInterval={30}
               marginHorizontal={0}
               enabled={true}
-              initialNumToRender={25}
-              onChange={(val) => {}}
-              visibleElements={4}
-              mainColor={'#5A646B'}
-              secondaryColor={'#DDDDDD'}
-              fontSize={27}
-              fontFamily={'quicksand-bold'}
-            ></TimePikerComponent>
-            <Text style={[styles.smallText, styles.smallTextMarginTop]}>
-              Until
-            </Text>
-            {/*<TimePikerComponent
-              selectedIndex={15}
-              height={75}
-              timeInterval={30}
-              marginHorizontal={15}
-              enabled={false}
-              initialNumToRender={25}
-              visibleElements={3}
               onChange={(val) => console.log(val)}
-            ></TimePikerComponent>*/}
+              visibleElements={4}
+              mainColor={"#5A646B"}
+              secondaryColor={"#DDDDDD"}
+              fontSize={27}
+              fontFamily={"quicksand-bold"}
+            ></HorizontalTimePiker>
+            <Text style={[styles.smallText]}>Until</Text>
+            <HorizontalTimePiker
+              selectedIndex={30}
+              height={72}
+              timeInterval={30}
+              marginHorizontal={0}
+              enabled={true}
+              onChange={(val) => console.log(val)}
+              visibleElements={4}
+              mainColor={"#5A646B"}
+              secondaryColor={"#DDDDDD"}
+              fontSize={27}
+              fontFamily={"quicksand-bold"}
+            ></HorizontalTimePiker>
             <TouchableWithoutFeedback onPress={() => alert("yes")}>
               <Image
                 style={styles.approve}
@@ -324,18 +324,30 @@ class OpenScreen extends React.Component<Props> {
             showDelete: false,
             blobImages: auxBlob,
           });
+        } else {
+          this.resetAnimationView(index);
         }
       } else {
-        Animated.spring(this.point[index], { toValue: { x: 0, y: 0 } }).start();
-        this.setState({
-          showDelete: false,
-        });
+        this.resetAnimationView(index);
       }
     } else {
       this.setState({
         showDelete: true,
       });
     }
+  }
+
+  resetAnimationView(index) {
+    Animated.spring(this.point[index], {
+      toValue: { x: 0, y: 0 },
+      tension: 50,
+      velocity: 70,
+    }).start();
+    setTimeout(() => {
+      this.setState({
+        showDelete: false,
+      });
+    }, 500);
   }
 
   _onPanGestureEvent = (index) =>

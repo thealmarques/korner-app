@@ -1,46 +1,52 @@
-import { StyleSheet } from "react-native";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { Dimensions } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 
-export const styles = StyleSheet.create({
+//we define rem equals to the entireScreenWidth / 380
+const entireScreenWidth = Dimensions.get("window").width;
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+
+export const styles = EStyleSheet.create({
   container: {
     backgroundColor: "#fff",
-    marginTop: hp('8%'),
-    marginBottom: hp('5%'),
+    marginVertical: '20rem',
     paddingBottom: 0,
-    paddingHorizontal: wp('7%'),
+    paddingHorizontal: '15rem',
     flex: 1
   },
+  createText: {
+    marginTop: '10rem',
+    fontFamily: "quicksand-bold",
+    fontSize: '20rem',
+  },
   header: {
-    flex: 1,
-    alignItems: "flex-start",
+    height: '100rem'
   },
   forms: {
-    flex: 3,
-    width: "100%"
-  },
-  forgot: {
-    marginTop: hp('2%'),
-    color: "#7C766E",
-    fontSize: wp('3%'),
-    fontFamily: "quicksand-bold",
-    textAlign: "right"
+    flex: 1
   },
   picture: {
+    marginTop: '16rem',
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start"
   },
   attachement: {
-    width: wp('8.5%'),
-    height: hp('8.5%'),
+    width: '30rem',
+    height: '30rem',
     resizeMode: 'contain',
-    marginTop: hp('2%'),
-    marginRight: wp('4%')
+    marginTop: '5rem',
+    marginRight: '5rem',
+    marginBottom: '5rem'
   },
   text: {
     color: "#7C766E",
-    marginTop: hp('1.5%'),
-    fontSize: wp('3.6%'),
+    marginTop: '5rem',
+    fontSize: '14rem',
     fontFamily: "quicksand-bold"
+  },
+  bottom: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 0
   }
 });

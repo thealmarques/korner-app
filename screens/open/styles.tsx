@@ -221,7 +221,7 @@ export const styles = EStyleSheet.create({
     height: '35rem',
     width: '35rem',
     resizeMode: 'contain',
-    marginTop: '20rem',
+    marginTop: '10rem',
     alignSelf: 'center'
    },
   smallText: {

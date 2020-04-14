@@ -1,43 +1,66 @@
-import { StyleSheet } from "react-native";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { Dimensions } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 
-export const styles = StyleSheet.create({
+//we define rem equals to the entireScreenWidth / 380
+const entireScreenWidth = Dimensions.get("window").width;
+EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+
+export const styles = EStyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    paddingBottom: 0,
-    paddingHorizontal: wp('7%'),
-    flex: 1,
-    alignItems: "center"
+    backgroundColor: "white",
+    paddingHorizontal: '30rem',
+    flex: 1
   },
-  header: {
-    flex: .6,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingBottom: 0
+  top: {
+    height: '250rem',
+    alignItems: 'center',
+    marginTop: '15rem'
   },
-  middle: {
-    flex: 1,
-    alignItems: "center",
-    width: "100%"
+  logo: {
+    width: '110rem',
+    height: '110rem',
+    resizeMode: 'contain'
   },
-  signInButton: {
-    marginTop: hp('4%'),
-    backgroundColor: "#F98514",
-    width: "100%",
-    paddingTop: hp('1.5%'),
-    paddingBottom: hp('1.5%'),
-    borderRadius: wp('4%')
-  },
-  buttonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontSize: wp('5%'),
+  subtext: {
+    marginTop: '35rem',
+    color: "#ADABAB",
+    fontSize: '12rem',
     fontFamily: "quicksand-bold"
   },
+  mainText: {
+    marginTop: '30rem',
+    color: "#3A4750",
+    fontSize: '14rem',
+    fontFamily: "quicksand-bold",
+    textAlign: 'center'
+  },
+  forms: {
+    marginTop: '15rem',
+    width: '100%',
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  forgot: {
+    marginTop: '5rem',
+    color: "#ADABAB",
+    fontSize: '12rem',
+    fontFamily: "quicksand-bold",
+    textAlign: "right",
+    marginBottom: "5rem"
+  },
   bottom: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginBottom: hp('2%'),
+    bottom: 0,
+    position: 'absolute',
     width: '100%'
+  },
+  smallText: {
+    width: '100%',
+    padding: '5rem',
+    marginTop: '8rem',
+    color: "#ADABAB",
+    fontSize: '14rem',
+    fontFamily: "quicksand-bold",
+    textAlign: "center",
+    marginBottom: '10rem'
   }
 });
