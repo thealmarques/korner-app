@@ -1,9 +1,12 @@
 import { Dimensions } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 
-//we define rem equals to the entireScreenWidth / 380
 const entireScreenWidth = Dimensions.get("window").width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+let factor = 380;
+if (entireScreenWidth > 500) {
+  factor = 440;
+}
+EStyleSheet.build({ $rem: entireScreenWidth / factor });
 
 export const styles = EStyleSheet.create({
   screen: {
@@ -194,8 +197,7 @@ export const styles = EStyleSheet.create({
     position: "absolute",
     bottom: 0,
     justifyContent: "flex-end",
-    height: "50%",
-    width: "100%",
+    height: "270rem",
     backgroundColor: "white",
     elevation: 2,
     flexDirection: "column"
@@ -218,8 +220,8 @@ export const styles = EStyleSheet.create({
     marginTop: '25rem'
   },
   approve: {
-    height: '35rem',
-    width: '35rem',
+    height: '30rem',
+    width: '30rem',
     resizeMode: 'contain',
     marginTop: '10rem',
     alignSelf: 'center'

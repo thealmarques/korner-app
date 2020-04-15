@@ -9,9 +9,8 @@ if (entireScreenWidth > 500) {
 EStyleSheet.build({ $rem: entireScreenWidth / factor });
 
 export const styles = EStyleSheet.create({
-    arrow: {
-        width: '25rem',
-        height: '18rem',
-        resizeMode: 'contain'
+    container: {
+        width: '70%',
+        height: '290rem',
     }
 });

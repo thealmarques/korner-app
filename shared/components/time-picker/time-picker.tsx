@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -6,20 +6,21 @@ import {
   Dimensions,
   Text,
   View,
-  FlatList,
-} from 'react-native';
+} from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import { Styles } from "./styles";
 
 interface Props {
   onChange: any;
   selectedIndex: number;
   timeInterval: number;
   enabled: boolean;
-  height: number;
+  height: string;
   marginHorizontal: number;
   visibleElements: number;
   mainColor: string;
   secondaryColor: string;
-  fontSize: number;
+  fontSize: string;
   fontFamily: string;
 }
 
@@ -32,11 +33,17 @@ export default class HorizontalTimePiker extends React.Component<Props> {
   };
   flatListRef: any;
   elementWidth: number = 0;
+  styles: Styles;
+
+  constructor(props) {
+    super(props);
+    this.styles = new Styles(this.props);
+  }
 
   componentDidMount() {
     let start = "4:00";
     let moment = "am";
-    const time = [];
+    let time = [];
     let clock = 1;
     time.push(start + moment);
     while (clock <= 24) {
@@ -56,12 +63,27 @@ export default class HorizontalTimePiker extends React.Component<Props> {
         time.push(start);
       }
     }
+    if (time.length - this.props.selectedIndex < 4 
+      || this.props.selectedIndex < 4) {
+      time = [...time, ...time];
+    }
     this.setState({
       time: time,
-      display: [...time],
+      display: [...time]
     });
     this.elementWidth =
       Dimensions.get("screen").width / this.props.visibleElements;
+  }
+
+  getInitialSelectedIndex(array: string[]) {
+    let index = -1;
+    if (array.length - this.props.selectedIndex < 4 ||
+      this.props.selectedIndex < 4) {
+      index = this.props.selectedIndex + array.length;
+    } else {
+      index = this.props.selectedIndex;
+    }
+    return index;
   }
 
   getItemLayout = (data: any, index: any) => {
@@ -85,24 +107,16 @@ export default class HorizontalTimePiker extends React.Component<Props> {
         });
       });
       this.setState({ selected: index, scrolling: false });
-      this.props.onChange(this.state.display[index]);
+      this.props.onChange(this.state.display[index], index);
     }
   }
 
   render() {
     return (
-      <View
-        style={{
-          marginHorizontal: this.props.marginHorizontal,
-          height: this.props.height,
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <View style={this.styles.stylesheet.container}>
         <FlatList
           directionalLockEnabled={true}
-          initialScrollIndex={this.props.selectedIndex}
+          initialScrollIndex={this.getInitialSelectedIndex(this.state.display)}
           getItemLayout={this.getItemLayout.bind(this)}
           decelerationRate={"fast"}
           scrollEnabled={this.props.enabled}
@@ -159,29 +173,12 @@ export default class HorizontalTimePiker extends React.Component<Props> {
     const moment = item.substring(item.length - 2, item.length);
     const time = item.substring(0, item.length - 2);
     return (
-      <View
-        style={{
-          width: this.elementWidth,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        key={index}
-      >
+      <View style={this.styles.stylesheet.item} key={index}>
         <Text
           style={
             this.state.selected === index
-              ? {
-                  fontSize: this.props.fontSize,
-                  fontFamily: this.props.fontFamily,
-                  color: this.props.mainColor,
-                  lineHeight: this.props.fontSize,
-                }
-              : {
-                  fontSize: this.props.fontSize - 7,
-                  fontFamily: this.props.fontFamily,
-                  color: this.props.secondaryColor,
-                  lineHeight: this.props.fontSize - 7,
-                }
+              ? this.styles.stylesheet.mainTextSelected
+              : this.styles.stylesheet.mainTextNotSelected
           }
         >
           {time}
@@ -189,18 +186,8 @@ export default class HorizontalTimePiker extends React.Component<Props> {
         <Text
           style={
             this.state.selected === index
-              ? {
-                  fontSize: this.props.fontSize - 9,
-                  fontFamily: this.props.fontFamily,
-                  color: this.props.mainColor,
-                  lineHeight: this.props.fontSize - 9,
-                }
-              : {
-                  fontSize: this.props.fontSize - 11,
-                  fontFamily: this.props.fontFamily,
-                  color: this.props.secondaryColor,
-                  lineHeight: this.props.fontSize - 11,
-                }
+              ? this.styles.stylesheet.smallTextSelected
+              : this.styles.stylesheet.smallTextNotSelected
           }
         >
           {moment}

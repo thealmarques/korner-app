@@ -10,6 +10,7 @@ export function saveMarker(
   notifyUpvotes: boolean,
   notifyCreated: boolean,
   distance: Number,
+  schedule: object[],
   type: string
 ): Promise<
   firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
@@ -24,6 +25,7 @@ export function saveMarker(
     notifyUpvotes: notifyUpvotes,
     notifyCreated: notifyCreated,
     distance: distance,
+    schedule: schedule,
     type: type
   });
 }

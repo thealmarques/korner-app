@@ -12,11 +12,15 @@ import { View, Text } from "native-base";
 import {
   TextInput,
   FlatList,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import * as Location from "expo-location";
 import { userLocation } from "../../shared/store/actions";
-import { getLocation } from "../../shared/Helper";
+import {
+  getLocation,
+  getOpenBusinessData,
+  getMarkers,
+} from "../../shared/Helper";
 
 interface Props {
   navigation: any;
@@ -35,7 +39,7 @@ class HomePage extends React.Component<Props> {
     clickedLocation: null,
     searchLocation: "",
     showChangeLocation: false,
-    searchResult: []
+    searchResult: [],
   };
 
   componentWillReceiveProps(nextProps) {
@@ -45,14 +49,14 @@ class HomePage extends React.Component<Props> {
     ) {
       this.setState({
         showCreateEvent: false,
-        clickedLocation: null
+        clickedLocation: null,
       });
-      this.fetchMarkers();
+      this.getMarkers();
     }
   }
 
   componentWillMount() {
-    this.fetchMarkers();
+    this.getMarkers();
   }
 
   render() {
@@ -64,7 +68,7 @@ class HomePage extends React.Component<Props> {
           command={undefined}
           changeLocation={() =>
             this.setState({
-              showChangeLocation: !this.state.showChangeLocation
+              showChangeLocation: !this.state.showChangeLocation,
             })
           }
         ></Header>
@@ -87,7 +91,7 @@ class HomePage extends React.Component<Props> {
           <TextInput
             style={styles.searchBar}
             placeholderTextColor="white"
-            onChangeText={text => {
+            onChangeText={(text) => {
               if (this.searchWaiting) clearTimeout(this.searchWaiting);
               this.searchWaiting = setTimeout(() => {
                 this.searchWaiting = null;
@@ -105,7 +109,7 @@ class HomePage extends React.Component<Props> {
               this.setState({
                 searchLocation: "",
                 showChangeLocation: false,
-                searchResult: []
+                searchResult: [],
               });
             }}
           >
@@ -142,14 +146,14 @@ class HomePage extends React.Component<Props> {
                         this.props.userLocation(
                           {
                             latitude: value[0].latitude,
-                            longitude: value[0].longitude
+                            longitude: value[0].longitude,
                           },
                           name
                         );
                         this.setState({
                           searchLocation: "",
                           showChangeLocation: false,
-                          searchResult: []
+                          searchResult: [],
                         });
                       }
                     );
@@ -171,18 +175,18 @@ class HomePage extends React.Component<Props> {
   }
 
   updateSearchResults(text: string) {
-    Location.geocodeAsync(text).then(async result => {
+    Location.geocodeAsync(text).then(async (result) => {
       const searchResult = [];
       for (let i = 0; i < result.length; i++) {
         const spot = result[i];
         const data = await Location.reverseGeocodeAsync({
           latitude: spot.latitude,
-          longitude: spot.longitude
+          longitude: spot.longitude,
         });
         searchResult.push(data);
       }
       this.setState({
-        searchResult: searchResult
+        searchResult: searchResult,
       });
     });
   }
@@ -208,7 +212,7 @@ class HomePage extends React.Component<Props> {
             latitude: this.props.coordinates.latitude,
             longitude: this.props.coordinates.longitude,
             latitudeDelta: 0,
-            longitudeDelta: 0
+            longitudeDelta: 0,
           }}
           rotateEnabled={false}
           style={{ flex: 1 }}
@@ -240,43 +244,46 @@ class HomePage extends React.Component<Props> {
   onMapPress(location: MapEvent) {
     this.setState({
       showCreateEvent: true,
-      clickedLocation: location.nativeEvent.coordinate
+      clickedLocation: location.nativeEvent.coordinate,
     });
   }
 
-  onMarkerPress(location) {}
+  onMarkerPress(location: Coordinates) {
+    getOpenBusinessData(location.latitude, location.longitude).then((query) => {
+      query.forEach(function (doc) {
+        const data = doc.data();
+      });
+    });
+  }
 
   onRegionChange(region: Region) {}
 
-  async fetchMarkers() {
-    var database = await firebase.firestore();
+  getMarkers() {
     const markers = [];
-    const ref = database
-      .collection("suggestions")
-      .get()
-      .then(data => {
-        data.docs.map(doc => {
-          markers.push({
-            coordinate: {
-              latitude: Number(doc.get("latitude")),
-              longitude: Number(doc.get("longitude"))
-            }
-          });
-        });
-        this.setState({
-          markers: this.state.markers.concat(markers)
+    getMarkers().then((data) => {
+      data.docs.map((doc) => {
+        markers.push({
+          coordinate: {
+            latitude: Number(doc.get("latitude")),
+            longitude: Number(doc.get("longitude")),
+          },
         });
       });
+      this.setState({
+        markers: this.state.markers.concat(markers),
+      });
+    });
   }
 }
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   coordinates: store.userLocation.coordinates,
-  locationName: store.userLocation.name
+  locationName: store.userLocation.name,
 });
 
-const mapDispatchToProps = dispatch => ({
-  userLocation: (coordinates, name) => dispatch(userLocation(coordinates, name))
+const mapDispatchToProps = (dispatch) => ({
+  userLocation: (coordinates, name) =>
+    dispatch(userLocation(coordinates, name)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

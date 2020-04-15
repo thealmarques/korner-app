@@ -1,14 +1,20 @@
-import { StyleSheet } from "react-native";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { Dimensions } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 
-export const styles = StyleSheet.create({
+const entireScreenWidth = Dimensions.get("window").width;
+let factor = 380;
+if (entireScreenWidth > 500) {
+  factor = 440;
+}
+EStyleSheet.build({ $rem: entireScreenWidth / factor });
+export const styles = EStyleSheet.create({
     container: {
         position: "absolute",
-        width: wp('70%'),
-        height: hp('36%'),
+        width: '70%',
+        height: '210rem',
         alignSelf: "center",
-        borderRadius: wp('2%'),
-        top: hp('32%'),
+        borderRadius: '15rem',
+        top: '32%',
         backgroundColor: 'white',
         shadowColor: "#000",
         shadowOffset: {
@@ -21,43 +27,45 @@ export const styles = StyleSheet.create({
     },
     topContainer: {
         flexDirection: 'row',
-        width: wp('70%'),
-        height: hp('15%'),
+        width: '100%',
+        height: '80rem',
         backgroundColor: '#5A646B',
-        borderTopLeftRadius: wp('2%'),
-        borderTopRightRadius: wp('2%'),
-        paddingHorizontal: wp('3%'),
-        paddingVertical: hp('2%'),
+        borderTopLeftRadius: '15rem',
+        borderTopRightRadius: '15rem',
+        paddingHorizontal: '10rem',
+        paddingVertical: '10rem',
         alignItems: 'flex-start',
         alignContent: 'flex-start'
     },
     image: {
-        width: wp('62%'),
-        height: hp('12%'),
+        width: '95%',
+        height: '100%',
         resizeMode: 'cover',
-        marginLeft: 0,
+        marginLeft: 0
     },
     iconContainer: {
-        width: wp('7%'),
-        height: hp('7%'),
+        width: '20rem',
+        height: '20rem',
     },
     icon: {
-        fontSize: wp('4.2%'),
+        fontSize: '18rem',
         color: 'white',
     },
     item: {
-        paddingHorizontal: wp('4.4%'),
-        paddingVertical: hp('2.3%')
+        paddingHorizontal: '10rem',
+        paddingVertical: '10rem',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     title: {
         color: "#3A4750",
-        fontSize: wp('3.7%'),
+        fontSize: '15rem',
         fontFamily: "quicksand-bold"
     },
     subtitle: {
         color: "#000000",
-        fontSize: wp('2.3%'),
-        marginTop: hp('0.4%'),
+        fontSize: '10rem',
+        marginTop: '5rem',
         fontFamily: "quicksand-bold"
     },
 });

@@ -26,8 +26,8 @@ class OpenScreen extends React.Component<Props> {
   scrollViewRef = null;
   point = [];
   days = ["S", "M", "T", "W", "T", "F", "S"];
-  lastOpen = 5;
-  lastClose = 5;
+  lastOpen = 15;
+  lastClose = 30;
   state = {
     selectedCategory: "1",
     selectedSubCategory: "1",
@@ -37,7 +37,7 @@ class OpenScreen extends React.Component<Props> {
     base64Images: [],
     showDelete: false,
     location: this.props.navigation.state.params.location,
-    schedule: new Array(7).fill(false),
+    schedule: new Array(7).fill(null),
     selectedDay: -1,
   };
 
@@ -53,6 +53,7 @@ class OpenScreen extends React.Component<Props> {
         null,
         null,
         this.state.distance,
+        this.state.schedule,
         "open"
       )
         .then((doc) => {
@@ -81,6 +82,15 @@ class OpenScreen extends React.Component<Props> {
     if (nextProps.navigation.state.params.location) {
       this.setState({
         location: nextProps.navigation.state.params.location,
+        selectedCategory: "1",
+        selectedSubCategory: "1",
+        description: "",
+        distance: 1000,
+        blobImages: [],
+        base64Images: [],
+        showDelete: false,
+        schedule: new Array(7).fill(null),
+        selectedDay: -1,
       });
     }
   }
@@ -207,11 +217,22 @@ class OpenScreen extends React.Component<Props> {
     return this.days.map((day, index) => {
       return (
         <TouchableWithoutFeedback
-          onPress={() => this.setState({ selectedDay: index })}
+          onPress={() => {
+            if (this.state.schedule[index] !== null) {
+              this.state.schedule[index] = null;
+              this.setState({
+                schedule: this.state.schedule,
+              });
+            } else {
+              this.setState({
+                selectedDay: index,
+              });
+            }
+          }}
           key={"day_" + index}
           style={[
             styles.dayContainer,
-            this.state.schedule[index]
+            this.state.schedule[index] !== null
               ? styles.daySelected
               : styles.dayNotSelected,
           ]}
@@ -241,7 +262,7 @@ class OpenScreen extends React.Component<Props> {
   }
 
   pickSchedule() {
-    if (this.state.selectedDay > 0) {
+    if (this.state.selectedDay >= 0) {
       return (
         <View style={[styles.schedulePickerContainer, styles.shadowSchedule]}>
           <View style={{ flex: 1 }}>
@@ -255,33 +276,46 @@ class OpenScreen extends React.Component<Props> {
             </TouchableWithoutFeedback>
             <Text style={[styles.smallText]}>Open from</Text>
             <HorizontalTimePiker
-              selectedIndex={15}
-              height={75}
+              selectedIndex={this.lastOpen}
+              height={"70rem"}
               timeInterval={30}
               marginHorizontal={0}
               enabled={true}
-              onChange={(val) => console.log(val)}
+              onChange={(val, index) => (this.lastOpen = index)}
               visibleElements={4}
               mainColor={"#5A646B"}
               secondaryColor={"#DDDDDD"}
-              fontSize={27}
+              fontSize={"24rem"}
               fontFamily={"quicksand-bold"}
             ></HorizontalTimePiker>
             <Text style={[styles.smallText]}>Until</Text>
             <HorizontalTimePiker
-              selectedIndex={30}
-              height={72}
+              selectedIndex={this.lastClose}
+              height={"70rem"}
               timeInterval={30}
               marginHorizontal={0}
               enabled={true}
-              onChange={(val) => console.log(val)}
+              onChange={(val: string, index: number) =>
+                (this.lastClose = index)
+              }
               visibleElements={4}
               mainColor={"#5A646B"}
               secondaryColor={"#DDDDDD"}
-              fontSize={27}
+              fontSize={"24rem"}
               fontFamily={"quicksand-bold"}
             ></HorizontalTimePiker>
-            <TouchableWithoutFeedback onPress={() => alert("yes")}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                this.state.schedule[this.state.selectedDay] = {
+                  open: this.lastOpen,
+                  close: this.lastClose,
+                };
+                this.setState({
+                  schedule: this.state.schedule,
+                  selectedDay: -1,
+                });
+              }}
+            >
               <Image
                 style={styles.approve}
                 source={require("../../shared/assets/approve.png")}

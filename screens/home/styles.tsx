@@ -1,9 +1,12 @@
 import { Dimensions } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 
-//we define rem equals to the entireScreenWidth / 380
 const entireScreenWidth = Dimensions.get("window").width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+let factor = 380;
+if (entireScreenWidth > 500) {
+  factor = 440;
+}
+EStyleSheet.build({ $rem: entireScreenWidth / factor });
 
 export const styles = EStyleSheet.create({
   marker: {

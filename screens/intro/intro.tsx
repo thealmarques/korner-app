@@ -65,6 +65,16 @@ export default class IntroPage extends React.Component<Props> {
             <Text style={styles.forgot} onPress={() => alert("Coming soon")}>
               Forgot password ?
             </Text>
+            <View style={styles.social}>
+              <Image
+                style={styles.socialGoogle}
+                source={require("../../shared/assets/google.png")}
+              />
+              <Image
+                style={styles.socialFacebook}
+                source={require("../../shared/assets/facebook.png")}
+              />
+            </View>
           </KeyboardAvoidingView>
           <View style={styles.bottom}>
             <ButtonComponent

@@ -1,66 +1,84 @@
 import { Dimensions } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 
-//we define rem equals to the entireScreenWidth / 380
 const entireScreenWidth = Dimensions.get("window").width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 });
+let factor = 380;
+if (entireScreenWidth > 500) {
+  factor = 440;
+}
+EStyleSheet.build({ $rem: entireScreenWidth / factor });
 
 export const styles = EStyleSheet.create({
   container: {
     backgroundColor: "white",
-    paddingHorizontal: '30rem',
-    flex: 1
+    paddingHorizontal: "30rem",
+    flex: 1,
   },
   top: {
-    height: '250rem',
-    alignItems: 'center',
-    marginTop: '15rem'
+    height: "220rem",
+    alignItems: "center",
+    marginTop: "18rem",
   },
   logo: {
-    width: '110rem',
-    height: '110rem',
-    resizeMode: 'contain'
+    width: "110rem",
+    height: "110rem",
+    resizeMode: "contain",
+  },
+  social: {
+    flexDirection: "row",
+    alignItems: 'center',
+    marginTop: '10rem'
+  },
+  socialGoogle: {
+    width: "60rem",
+    height: "60rem",
+    resizeMode: "contain",
+  },
+  socialFacebook: {
+    marginLeft: '10rem',
+    width: "50rem",
+    height: "50rem",
+    resizeMode: "contain",
   },
   subtext: {
-    marginTop: '35rem',
+    marginTop: "15rem",
     color: "#ADABAB",
-    fontSize: '12rem',
-    fontFamily: "quicksand-bold"
+    fontSize: "12rem",
+    fontFamily: "quicksand-bold",
   },
   mainText: {
-    marginTop: '30rem',
+    marginTop: "15rem",
     color: "#3A4750",
-    fontSize: '14rem',
+    fontSize: "14rem",
     fontFamily: "quicksand-bold",
-    textAlign: 'center'
+    textAlign: "center",
   },
   forms: {
-    marginTop: '15rem',
-    width: '100%',
-    flex: 1,
-    justifyContent: 'flex-start',
+    width: "100%",
+    flex: 0.8,
+    justifyContent: "flex-start",
   },
   forgot: {
-    marginTop: '5rem',
+    marginTop: "2rem",
     color: "#ADABAB",
-    fontSize: '12rem',
+    fontSize: "12rem",
     fontFamily: "quicksand-bold",
     textAlign: "right",
-    marginBottom: "5rem"
+    marginBottom: "2rem",
   },
   bottom: {
     bottom: 0,
-    position: 'absolute',
-    width: '100%'
+    position: "absolute",
+    width: "100%",
   },
   smallText: {
-    width: '100%',
-    padding: '5rem',
-    marginTop: '8rem',
+    width: "100%",
+    padding: "5rem",
+    marginTop: "8rem",
     color: "#ADABAB",
-    fontSize: '14rem',
+    fontSize: "14rem",
     fontFamily: "quicksand-bold",
     textAlign: "center",
-    marginBottom: '10rem'
-  }
+    marginBottom: "10rem",
+  },
 });
