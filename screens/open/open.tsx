@@ -17,6 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { BackHandler } from "react-native";
 import { convertUriToBlob, convertToBase64 } from "../../shared/Helper";
 import HorizontalTimePiker from "../../shared/components/time-picker/time-picker";
+import responsiveFactor from "./responsive";
 
 interface Props {
   navigation: any;
@@ -26,6 +27,7 @@ class OpenScreen extends React.Component<Props> {
   scrollViewRef = null;
   point = [];
   days = ["S", "M", "T", "W", "T", "F", "S"];
+  deletedImages = 0;
   lastOpen = 15;
   lastClose = 30;
   state = {
@@ -332,8 +334,8 @@ class OpenScreen extends React.Component<Props> {
       const width = Dimensions.get("window").width;
       const height = Dimensions.get("window").height;
       const heightOffset = (height * 15) / 100;
-      const imageWidth = 35 * (width / 380);
-      const imageHeight = 35 * (height / 380);
+      const imageWidth = 35 * (width / responsiveFactor);
+      const imageHeight = 35 * (height / responsiveFactor);
       const middleWidth = width / 2;
       if (
         nativeEvent.absoluteY < heightOffset + imageHeight &&
@@ -348,6 +350,7 @@ class OpenScreen extends React.Component<Props> {
               return value;
             }
           });
+          this.deletedImages += 1;
           const auxBlob = this.state.blobImages.filter((value, idx) => {
             if (idx !== index) {
               return value;
@@ -374,14 +377,12 @@ class OpenScreen extends React.Component<Props> {
   resetAnimationView(index) {
     Animated.spring(this.point[index], {
       toValue: { x: 0, y: 0 },
-      tension: 50,
-      velocity: 70,
-    }).start();
-    setTimeout(() => {
+      speed: 200
+    }).start(() => {
       this.setState({
-        showDelete: false,
-      });
-    }, 500);
+        showDelete: false
+      })
+    });
   }
 
   _onPanGestureEvent = (index) =>
@@ -407,10 +408,10 @@ class OpenScreen extends React.Component<Props> {
           onHandlerStateChange={({ nativeEvent }) =>
             this.onHandlerStateChange({ nativeEvent }, index)
           }
-          key={index}
+          key={'pan_' + index + 'd_' + this.deletedImages}
         >
           <Animated.View
-            key={index}
+            key={'animated_' + index + 'd_' + this.deletedImages}
             style={[
               { elevation: 2 },
               {
@@ -422,7 +423,7 @@ class OpenScreen extends React.Component<Props> {
             ]}
           >
             <Image
-              key={"upload-" + index}
+              key={"upload_" + index + 'd_' + this.deletedImages}
               style={[styles.uplodedImage]}
               source={{ uri: base64.toString() }}
             ></Image>

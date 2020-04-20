@@ -1,12 +1,8 @@
-import { Dimensions } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
+import { Dimensions } from "react-native";
+import responsiveFactor from "./responsive";
 
-const entireScreenWidth = Dimensions.get("window").width;
-let factor = 380;
-if (entireScreenWidth > 500) {
-  factor = 440;
-}
-EStyleSheet.build({ $rem: entireScreenWidth / factor });
+EStyleSheet.build({ $rem: Dimensions.get("window").width / responsiveFactor });
 
 export const styles = EStyleSheet.create({
   screen: {
