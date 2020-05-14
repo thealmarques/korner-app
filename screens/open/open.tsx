@@ -46,18 +46,18 @@ class OpenScreen extends React.Component<Props> {
   create = {
     title: "Create",
     callback: () => {
-      saveMarker(
-        this.state.location.latitude,
-        this.state.location.longitude,
-        this.state.selectedCategory,
-        this.state.selectedSubCategory,
-        this.state.description,
-        null,
-        null,
-        this.state.distance,
-        this.state.schedule,
-        "open"
-      )
+      saveMarker({
+        latitude: this.state.location.latitude,
+        longitude: this.state.location.longitude,
+        category: this.state.selectedCategory,
+        subcategory: this.state.selectedSubCategory,
+        description: this.state.description,
+        notifyUpvotes: null,
+        notifyCreated: null,
+        distance: this.state.distance,
+        schedule: this.state.schedule,
+        type: "open"
+      })
         .then((doc) => {
           storeImages(doc.id, this.state.blobImages);
           this.props.navigation.navigate("Home", {

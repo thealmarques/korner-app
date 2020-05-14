@@ -32,17 +32,18 @@ export default class SuggestScreen extends React.Component<Props> {
   create = {
     title: "Create",
     callback: () => {
-      saveMarker(
-        this.state.location.latitude,
-        this.state.location.longitude,
-        this.state.selectedCategory,
-        this.state.selectedSubCategory,
-        this.state.description,
-        this.state.notifyUpvotes,
-        this.state.notifyCreated,
-        this.state.distance,
-        "suggest"
-      )
+      saveMarker({
+        latitude: this.state.location.latitude,
+        longitude: this.state.location.longitude,
+        category: this.state.selectedCategory,
+        subcategory: this.state.selectedSubCategory,
+        description: this.state.description,
+        notifyUpvotes: this.state.notifyUpvotes,
+        notifyCreated: this.state.notifyCreated,
+        distance: this.state.distance,
+        schedule: null,
+        type: "suggest"
+      })
         .then(value => {
           this.props.navigation.navigate("Home", {
             event: "create"

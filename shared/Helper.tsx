@@ -1,6 +1,5 @@
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
-import * as firebase from "firebase";
 
 export function convertUriToBlob(uri: string): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -28,19 +27,6 @@ export function convertToBase64(blob) {
       resolve(base64data);
     };
   });
-}
-
-export function getMarkers() {
-  return firebase.firestore().collection("suggestions").get();
-}
-
-export function getOpenBusinessData(latitude: number, longitude: number) {
-  return firebase
-    .firestore()
-    .collection("suggestions")
-    .where("latitude", "==", latitude)
-    .where("longitude", "==", longitude)
-    .get();
 }
 
 export async function getLocation() {

@@ -3,7 +3,6 @@ import { SafeAreaView } from "react-navigation";
 import Header from "../../shared/components/header/header";
 import { Image } from "react-native";
 import MapView, { MapEvent, Marker, Region } from "react-native-maps";
-import * as firebase from "firebase";
 import "firebase/firestore";
 import CreateEventComponent from "../../shared/components/create-marker/create";
 import { connect } from "react-redux";
@@ -17,10 +16,11 @@ import {
 import * as Location from "expo-location";
 import { userLocation } from "../../shared/store/actions";
 import {
-  getLocation,
-  getOpenBusinessData,
-  getMarkers,
+  getLocation
 } from "../../shared/Helper";
+import { Business } from "../../shared/interfaces/business";
+import OpenModalComponent from "../../shared/components/open-modal/open-modal";
+import { getOpenBusinessData, getMarkers } from "../../shared/api/api";
 
 interface Props {
   navigation: any;
@@ -40,6 +40,7 @@ class HomePage extends React.Component<Props> {
     searchLocation: "",
     showChangeLocation: false,
     searchResult: [],
+    showOpenModalComponent: null
   };
 
   componentWillReceiveProps(nextProps) {
@@ -76,6 +77,7 @@ class HomePage extends React.Component<Props> {
         {this.renderSearchResults()}
         {this.showMap()}
         {this.showCreateEvent()}
+        {this.showOpenModalComponent()}
       </SafeAreaView>
     );
   }
@@ -249,14 +251,33 @@ class HomePage extends React.Component<Props> {
   }
 
   onMarkerPress(location: Coordinates) {
+    this.props.coordinates.longitude = location.longitude;
+    this.props.coordinates.latitude = location.latitude;
     getOpenBusinessData(location.latitude, location.longitude).then((query) => {
-      query.forEach(function (doc) {
-        const data = doc.data();
+      query.forEach((doc) => {
+        const data = doc.data() as Business;
+        data.id = doc.id;
+        if (data.type === 'open') {
+          this.setState({
+            showOpenModalComponent: data
+          });
+        }
       });
     });
   }
 
-  onRegionChange(region: Region) {}
+  showOpenModalComponent() {
+    if (this.state.showOpenModalComponent) {
+      return (
+        <OpenModalComponent data={this.state.showOpenModalComponent} closeModal={() => this.setState({
+          showOpenModalComponent: null
+        })}></OpenModalComponent>
+      )
+    }
+  }
+
+  onRegionChange(region: Region) {
+  }
 
   getMarkers() {
     const markers = [];
