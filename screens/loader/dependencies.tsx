@@ -8,6 +8,8 @@ import * as Location from "expo-location";
 import { connect } from "react-redux";
 import { userLocation } from "../../shared/store/actions";
 import { getLocation } from "../../shared/Helper";
+import { Notifications } from 'expo';
+import { bindNotificationToken } from "../../shared/api/api";
 
 interface Props {
   userLocation: any;
@@ -17,7 +19,8 @@ interface Props {
 class DependenciesLoader extends React.Component<Props> {
   state = {
     imagesLoaded: false,
-    locationLoaded: false
+    locationLoaded: false,
+    token: ""
   };
 
   async componentWillMount() {
@@ -48,11 +51,31 @@ class DependenciesLoader extends React.Component<Props> {
       "quicksand-regular": require("../../shared/assets/fonts/Quicksand-Regular.ttf"),
       "quicksand-bold": require("../../shared/assets/fonts/Quicksand-Bold.ttf")
     });
+    
+    await this.registerPushNotifications();
+
     this.setState({ imagesLoaded: true });
   }
 
+  async registerPushNotifications() {
+    const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = status;
+
+    if (finalStatus != 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+
+    if (finalStatus != 'granted') {
+      return;
+    }
+
+    let token = await Notifications.getExpoPushTokenAsync();
+    this.state.token = token;
+  }
+
   async componentDidMount() {
-    const location:any = await getLocation();
+    const location: any = await getLocation();
     this.props.userLocation(location.coordinates, location.name);
     this.setState({
       locationLoaded: true
@@ -71,6 +94,7 @@ class DependenciesLoader extends React.Component<Props> {
       return (
         <AuthenticationLoader
           navigation={this.props.navigation}
+          token={this.state.token}
         ></AuthenticationLoader>
       );
     }

@@ -1,6 +1,17 @@
 import * as firebase from "firebase";
 import { Business } from "../interfaces/business";
 
+export function bindNotificationToken(token: string) {
+  firebase.firestore().collection("users")
+    .doc(firebase.auth().currentUser.uid).update({
+      token
+    }).catch((err) => {
+      firebase.firestore().collection("users").add({
+        token
+      });
+    });
+}
+
 export function getMarkers() {
   return firebase.firestore().collection("suggestions").get();
 }

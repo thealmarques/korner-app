@@ -19,11 +19,25 @@ export const styles = EStyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  modal: {
+  modalOpen: {
     borderRadius: '5rem',
     backgroundColor: 'white',
     width: '80%',
     height: '400rem',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalSuggest: {
+    borderRadius: '5rem',
+    backgroundColor: 'white',
+    width: '80%',
+    height: '330rem',
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

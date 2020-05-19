@@ -66,7 +66,7 @@ export default class OpenModalComponent extends React.Component<Props> {
         if (this.state.imageUrls && this.state.data) {
             return (
                 <View style={styles.container}>
-                    <View style={styles.modal}>
+                    <View style={[this.state.data.type === 'open' ? styles.modalOpen : styles.modalSuggest]}>
                         <CarouselComponent urls={this.state.imageUrls} closeCallback={() => {
                             if (this.state.data.upvotes.length - this.state.data.downvotes.length !== this.initialVotes) {
                                 // update entry

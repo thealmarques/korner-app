@@ -2,9 +2,11 @@ import React from "react";
 import { ActivityIndicator, StatusBar, View } from "react-native";
 import * as firebase from "firebase";
 import { firebaseConfig } from "../../shared/constants/server";
+import { bindNotificationToken } from "../../shared/api/api";
 
 interface Props {
   navigation: any;
+  token: string;
 }
 
 export default class AuthenticationLoader extends React.Component<Props> {
@@ -28,6 +30,9 @@ export default class AuthenticationLoader extends React.Component<Props> {
   }
 
   onAuthStateChanged(user: firebase.User) {
+    if (user) {
+      bindNotificationToken(this.props.token);
+    }
     this.props.navigation.navigate(user ? "App" : "Auth");
   }
 }
