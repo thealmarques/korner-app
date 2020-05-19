@@ -1,9 +1,12 @@
 import * as firebase from "firebase";
-import "firebase/firestore";
 import { Business } from "../interfaces/business";
 
 export function getMarkers() {
   return firebase.firestore().collection("suggestions").get();
+}
+
+export function updateBusinessData(data: Business) {
+  firebase.firestore().collection("suggestions").doc(data.id).update(data);
 }
 
 export function getOpenBusinessData(latitude: number, longitude: number) {
@@ -49,12 +52,14 @@ export function saveMarker(data: Business
     notifyCreated: data.notifyCreated,
     distance: data.distance,
     schedule: data.schedule,
-    type: data.type
+    type: data.type,
+    upvotes: [],
+    downvotes: []
   });
 }
 
 export function storeImages(id: string, blob: Blob[]) {
-  const ref = firebase.storage().ref("/business-pictures/" + id)
+  const ref = firebase.storage().ref("/business-pictures/" + id);
   blob.map(async (value, index) => {
     await ref.child('image_' + index)
       .put(value, {

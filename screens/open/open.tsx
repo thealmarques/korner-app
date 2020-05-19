@@ -9,7 +9,7 @@ import {
   State,
 } from "react-native-gesture-handler";
 import { styles } from "./styles";
-import { SafeAreaView, Image, Animated, Dimensions } from "react-native";
+import { SafeAreaView, Image, Animated, Dimensions, Alert } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
 import { saveMarker, storeImages } from "../../shared/api/api";
@@ -56,7 +56,9 @@ class OpenScreen extends React.Component<Props> {
         notifyCreated: null,
         distance: this.state.distance,
         schedule: this.state.schedule,
-        type: "open"
+        type: "open",
+        downvotes: [],
+        upvotes: []
       })
         .then((doc) => {
           storeImages(doc.id, this.state.blobImages);
@@ -64,6 +66,7 @@ class OpenScreen extends React.Component<Props> {
             event: "create",
           });
           this.resetState();
+          Alert.alert('Created with sucess', 'Thank you for you contribution.');
         })
         .catch((error) => {
           alert(error.message);

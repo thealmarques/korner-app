@@ -42,7 +42,9 @@ export default class SuggestScreen extends React.Component<Props> {
         notifyCreated: this.state.notifyCreated,
         distance: this.state.distance,
         schedule: null,
-        type: "suggest"
+        type: "suggest",
+        upvotes: [],
+        downvotes: []
       })
         .then(value => {
           this.props.navigation.navigate("Home", {
@@ -96,6 +98,7 @@ export default class SuggestScreen extends React.Component<Props> {
             locationName=""
             navigation={this.props.navigation}
             command={this.create}
+            changeLocation={null}
           ></Header>
           <Text style={styles.text}>Choose a category & subcategory</Text>
           <FlatList

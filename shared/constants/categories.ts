@@ -84,19 +84,127 @@ export const categories = [
         id: '4',
         title: 'Aesthetics',
         image: require('../../shared/assets/barbershop.png'),
-        subcategories: []
+        subcategories: [
+            {
+                id: '1',
+                title: 'Restaurant',
+                image: require('../../shared/assets/food.png'),
+            },
+            {
+                id: '2',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '3',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            },
+            {
+                id: '4',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '5',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            },
+            {
+                id: '6',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '7',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            }
+        ]
     },
     {
         id: '5',
         title: 'Aesthetics',
         image: require('../../shared/assets/barbershop.png'),
-        subcategories: []
+        subcategories: [
+            {
+                id: '1',
+                title: 'Restaurant',
+                image: require('../../shared/assets/food.png'),
+            },
+            {
+                id: '2',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '3',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            },
+            {
+                id: '4',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '5',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            },
+            {
+                id: '6',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '7',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            }
+        ]
     },
     {
         id: '6',
         title: 'Aesthetics',
         image: require('../../shared/assets/barbershop.png'),
-        subcategories: []
+        subcategories: [
+            {
+                id: '1',
+                title: 'Restaurant',
+                image: require('../../shared/assets/food.png'),
+            },
+            {
+                id: '2',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '3',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            },
+            {
+                id: '4',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '5',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            },
+            {
+                id: '6',
+                title: 'Coffeeshop',
+                image: require('../../shared/assets/coffee-cup.png'),
+            },
+            {
+                id: '7',
+                title: 'Bar',
+                image: require('../../shared/assets/beer.png'),
+            }
+        ]
     },
     {
         id: '7',
@@ -109,7 +217,7 @@ export const categories = [
         title: 'Aesthetics',
         image: require('../../shared/assets/barbershop.png'),
         subcategories: []
-    },{
+    }, {
         id: '8',
         title: 'Aesthetics',
         image: require('../../shared/assets/barbershop.png'),

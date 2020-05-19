@@ -9,5 +9,7 @@ export interface Business {
     notifyCreated: boolean,
     distance: Number,
     schedule: object[],
-    type: string
+    type: string,
+    upvotes: string[],
+    downvotes: string[]
 }

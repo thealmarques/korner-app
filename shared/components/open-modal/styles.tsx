@@ -131,5 +131,30 @@ export const styles = EStyleSheet.create({
   },
   smallTextMarginTop: {
     marginTop: "16rem"
+  },
+  arrow: {
+    marginTop: '5rem',
+    width: '20rem',
+    height: '14rem'
+  },
+  arrowMargin: {
+    marginRight: '13rem'
+  },
+  voteText: {
+    fontFamily: "quicksand-bold",
+    fontSize: "14rem"
+  },
+  greyColor: {
+    color: '#AFAFAF'
+  },
+  greenColor: {
+    color: '#199B44'
+  },
+  redColor: {
+    color: 'red'
+  },
+  votesContainer: {
+    flexDirection: 'row',
+    marginTop: '2.5rem'
   }
 });

@@ -19,7 +19,7 @@ export const styles = EStyleSheet.create({
         position: 'absolute',
         right: '8rem',
         top: '8rem',
-        fontSize: '22rem',
+        fontSize: '25rem',
         color: 'white',
         zIndex: 100
     },

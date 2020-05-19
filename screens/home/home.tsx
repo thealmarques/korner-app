@@ -18,9 +18,8 @@ import { userLocation } from "../../shared/store/actions";
 import {
   getLocation
 } from "../../shared/Helper";
-import { Business } from "../../shared/interfaces/business";
 import OpenModalComponent from "../../shared/components/open-modal/open-modal";
-import { getOpenBusinessData, getMarkers } from "../../shared/api/api";
+import { getMarkers } from "../../shared/api/api";
 
 interface Props {
   navigation: any;
@@ -244,6 +243,9 @@ class HomePage extends React.Component<Props> {
   }
 
   onMapPress(location: MapEvent) {
+    this.props.coordinates.latitude = location.nativeEvent.coordinate.latitude;
+    this.props.coordinates.longitude = location.nativeEvent.coordinate.longitude;
+
     this.setState({
       showCreateEvent: true,
       clickedLocation: location.nativeEvent.coordinate,
@@ -253,23 +255,15 @@ class HomePage extends React.Component<Props> {
   onMarkerPress(location: Coordinates) {
     this.props.coordinates.longitude = location.longitude;
     this.props.coordinates.latitude = location.latitude;
-    getOpenBusinessData(location.latitude, location.longitude).then((query) => {
-      query.forEach((doc) => {
-        const data = doc.data() as Business;
-        data.id = doc.id;
-        if (data.type === 'open') {
-          this.setState({
-            showOpenModalComponent: data
-          });
-        }
-      });
-    });
+    this.setState({
+      showOpenModalComponent: location
+    })
   }
 
   showOpenModalComponent() {
     if (this.state.showOpenModalComponent) {
       return (
-        <OpenModalComponent data={this.state.showOpenModalComponent} closeModal={() => this.setState({
+        <OpenModalComponent location={this.state.showOpenModalComponent} closeModal={() => this.setState({
           showOpenModalComponent: null
         })}></OpenModalComponent>
       )
