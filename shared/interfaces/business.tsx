@@ -11,5 +11,6 @@ export interface Business {
     schedule: object[],
     type: string,
     upvotes: string[],
-    downvotes: string[]
+    downvotes: string[],
+    creator: string
 }

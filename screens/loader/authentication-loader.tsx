@@ -31,7 +31,8 @@ export default class AuthenticationLoader extends React.Component<Props> {
 
   onAuthStateChanged(user: firebase.User) {
     if (user) {
-      bindNotificationToken(this.props.token);
+      console.log(user.uid);
+      bindNotificationToken(this.props.token, user.uid);
     }
     this.props.navigation.navigate(user ? "App" : "Auth");
   }

@@ -1,15 +1,20 @@
 import * as firebase from "firebase";
 import { Business } from "../interfaces/business";
+import { sendNotification } from "./notifications";
 
-export function bindNotificationToken(token: string) {
-  firebase.firestore().collection("users")
-    .doc(firebase.auth().currentUser.uid).update({
-      token
-    }).catch((err) => {
-      firebase.firestore().collection("users").add({
-        token
+export function bindNotificationToken(token: string, uid: string) {
+  firebase.firestore().collection("users").where('user', '==', uid).get().then((query) => {
+    firebase.firestore().collection("users")
+      .doc(query.docs[0].id).update({
+        token,
+        user: uid
       });
+  }).catch((err) => {
+    firebase.firestore().collection("users").add({
+      token,
+      user: uid
     });
+  });
 }
 
 export function getMarkers() {
@@ -17,7 +22,20 @@ export function getMarkers() {
 }
 
 export function updateBusinessData(data: Business) {
-  firebase.firestore().collection("suggestions").doc(data.id).update(data);
+  firebase.firestore().collection("suggestions").doc(data.id).update(data).then(() => {
+    firebase.firestore().collection('users').where('user', '==', data.creator)
+            .get().then((query) => {
+              let message = '';
+              const token = query.docs[0].data().token;
+              const upvote = data.upvotes.findIndex((value) => value === firebase.auth().currentUser.uid);
+              if (upvote > -1) {
+                message = 'Someone liked your post';
+              } else {
+                message = 'Someone disliked your post';
+              }
+              sendNotification([token], message);
+            });
+  });
 }
 
 export function getOpenBusinessData(latitude: number, longitude: number) {
@@ -53,6 +71,7 @@ export function saveMarker(data: Business
   firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
 > {
   const db = firebase.firestore();
+  console.log(firebase.auth().currentUser.uid);
   return db.collection("suggestions").add({
     latitude: data.latitude,
     longitude: data.longitude,
@@ -65,7 +84,8 @@ export function saveMarker(data: Business
     schedule: data.schedule,
     type: data.type,
     upvotes: [],
-    downvotes: []
+    downvotes: [],
+    creator: firebase.auth().currentUser.uid
   });
 }
 
