@@ -1,5 +1,6 @@
 import * as Permissions from "expo-permissions";
 import * as Location from "expo-location";
+import { Coordinates } from "./interfaces/coordinates";
 
 export function convertUriToBlob(uri: string): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -62,4 +63,27 @@ export async function getLocation() {
       name,
     });
   });
+}
+
+/**
+ * Calculates the distance (in kms) between point A and B using earth's radius as the spherical surface
+ * @param pointA Coordinates from Point A
+ * @param pointB Coordinates from Point B
+ * Based on https://www.movable-type.co.uk/scripts/latlong.html
+ */
+export function haversineDistance(pointA: Coordinates, pointB: Coordinates): number {
+  var radius = 6371; // km     
+
+  //convert latitude and longitude to radians
+  const deltaLatitude = (pointB.latitude - pointA.latitude) * Math.PI / 180;
+  const deltaLongitude = (pointB.longitude - pointA.longitude) * Math.PI / 180;
+
+  const halfChordLength = Math.cos(
+      pointA.latitude * Math.PI / 180) * Math.cos(pointB.latitude * Math.PI / 180) 
+      * Math.sin(deltaLongitude/2) * Math.sin(deltaLongitude/2)
+      + Math.sin(deltaLatitude/2) * Math.sin(deltaLatitude/2);
+
+  const angularDistance = 2 * Math.atan2(Math.sqrt(halfChordLength), Math.sqrt(1 - halfChordLength));
+
+  return radius * angularDistance;
 }

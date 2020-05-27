@@ -51,7 +51,10 @@ class HomePage extends React.Component<Props> {
         showCreateEvent: false,
         clickedLocation: null,
       });
-      this.getMarkers();
+      setTimeout(() => {
+        // give time to store images
+        this.getMarkers();
+      }, 2000);
     }
   }
 

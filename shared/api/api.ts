@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import { Business } from "../interfaces/business";
 import { sendNotification } from "./notifications";
+import { haversineDistance } from "../Helper";
 
 export function bindNotificationToken(token: string, uid: string) {
   firebase.firestore().collection("users").where('user', '==', uid).get().then((query) => {
@@ -24,17 +25,17 @@ export function getMarkers() {
 export function updateBusinessData(data: Business) {
   firebase.firestore().collection("suggestions").doc(data.id).update(data).then(() => {
     firebase.firestore().collection('users').where('user', '==', data.creator)
-            .get().then((query) => {
-              let message = '';
-              const token = query.docs[0].data().token;
-              const upvote = data.upvotes.findIndex((value) => value === firebase.auth().currentUser.uid);
-              if (upvote > -1) {
-                message = 'Someone liked your post';
-              } else {
-                message = 'Someone disliked your post';
-              }
-              sendNotification([token], message);
-            });
+      .get().then((query) => {
+        let message = '';
+        const token = query.docs[0].data().token;
+        const upvote = data.upvotes.findIndex((value) => value === firebase.auth().currentUser.uid);
+        if (upvote > -1) {
+          message = 'Someone liked your post';
+        } else {
+          message = 'Someone disliked your post';
+        }
+        sendNotification([token], message);
+      });
   });
 }
 
@@ -71,7 +72,6 @@ export function saveMarker(data: Business
   firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
 > {
   const db = firebase.firestore();
-  console.log(firebase.auth().currentUser.uid);
   return db.collection("suggestions").add({
     latitude: data.latitude,
     longitude: data.longitude,
@@ -95,6 +95,48 @@ export function storeImages(id: string, blob: Blob[]) {
     await ref.child('image_' + index)
       .put(value, {
         contentType: "image/jpeg"
+      });
+  });
+}
+
+export function findNearesBusinessSuggestions(target: Business) {
+  getBusinessSuggestions(target.category, target.subcategory).then((vals) => {
+    const business = vals[0].data() as Business;
+    const distance = haversineDistance({
+      latitude: parseFloat(business.latitude),
+      longitude: parseFloat(business.longitude)
+    },
+      {
+        latitude: parseFloat(target.latitude),
+        longitude: parseFloat(target.longitude)
+      });
+    if (distance <= (target.distance / 1000)
+      && target.id !== business.id) {
+      const firestoreRef = firebase.firestore().collection('users')
+        .where('user', '==', business.creator);
+
+      if (business.upvotes.length > 0) {
+        business.upvotes.map((id) => {
+          firestoreRef.where('user', '==', id);
+        });
+      }
+
+      firestoreRef.get().then((query) => {
+        let message = 'A new business that you like has opened.';
+        const token = query.docs[0].data().token;
+        sendNotification([token], message);
+      });
+    }
+  });
+}
+
+async function getBusinessSuggestions(category: string, subcategory: string): Promise<any[]> {
+  return new Promise((resolve, reject) => {
+    firebase.firestore().collection('suggestions').where('category', '==', category)
+      .where('subcategory', '==', subcategory)
+      .where('type', '==', 'suggest')
+      .get().then(documents => {
+        resolve(documents.docs);
       });
   });
 }

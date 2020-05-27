@@ -7,10 +7,10 @@ export interface Business {
     description: string,
     notifyUpvotes: boolean,
     notifyCreated: boolean,
-    distance: Number,
+    distance: number,
     schedule: object[],
     type: string,
     upvotes: string[],
     downvotes: string[],
-    creator: string
+    creator?: string
 }

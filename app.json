@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MyAPP",
-    "slug": "rn-first-app",
+    "name": "Korner",
+    "slug": "rn-korner-app",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [

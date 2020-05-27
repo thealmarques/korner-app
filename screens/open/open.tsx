@@ -12,12 +12,13 @@ import { styles } from "./styles";
 import { SafeAreaView, Image, Animated, Dimensions, Alert } from "react-native";
 import Header from "../../shared/components/header/header";
 import { categories } from "../../shared/constants/categories";
-import { saveMarker, storeImages } from "../../shared/api/api";
+import { saveMarker, storeImages, findNearesBusinessSuggestions } from "../../shared/api/api";
 import * as ImagePicker from "expo-image-picker";
 import { BackHandler } from "react-native";
 import { convertUriToBlob, convertToBase64 } from "../../shared/Helper";
 import HorizontalTimePiker from "../../shared/components/time-picker/time-picker";
 import responsiveFactor from "./responsive";
+import { Business } from "../../shared/interfaces/business";
 
 interface Props {
   navigation: any;
@@ -46,7 +47,7 @@ class OpenScreen extends React.Component<Props> {
   create = {
     title: "Create",
     callback: () => {
-      saveMarker({
+      const business: Business = {
         latitude: this.state.location.latitude,
         longitude: this.state.location.longitude,
         category: this.state.selectedCategory,
@@ -59,14 +60,16 @@ class OpenScreen extends React.Component<Props> {
         type: "open",
         downvotes: [],
         upvotes: []
-      })
+      };
+      saveMarker(business)
         .then((doc) => {
           storeImages(doc.id, this.state.blobImages);
+          business.id = doc.id;
+          findNearesBusinessSuggestions(business);
           this.props.navigation.navigate("Home", {
             event: "create",
           });
           this.resetState();
-          Alert.alert('Created with sucess', 'Thank you for you contribution.');
         })
         .catch((error) => {
           alert(error.message);
