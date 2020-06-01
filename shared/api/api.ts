@@ -136,7 +136,9 @@ async function getBusinessSuggestions(category: string, subcategory: string): Pr
       .where('subcategory', '==', subcategory)
       .where('type', '==', 'suggest')
       .get().then(documents => {
-        resolve(documents.docs);
+        if (documents.docs.length > 0) {
+          resolve(documents.docs);
+        }
       });
   });
 }

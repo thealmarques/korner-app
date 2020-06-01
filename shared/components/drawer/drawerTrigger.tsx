@@ -6,7 +6,7 @@ import { DrawerActions } from 'react-navigation-drawer';
 import { widthPercentageToDP, heightPercentageToDP } from 'react-native-responsive-screen';
 
 interface Props {
-    navigation: any;
+  navigation: any;
 }
 
 export default class DrawerTrigger extends React.Component<Props> {

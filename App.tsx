@@ -3,7 +3,7 @@ import {
   createSwitchNavigator,
   SafeAreaView
 } from "react-navigation";
-import { createStackNavigator} from "react-navigation-stack";
+import { createStackNavigator } from "react-navigation-stack";
 import IntroPage from "./screens/intro/intro";
 import LoginPage from "./screens/login/login";
 import RegisterPage from "./screens/register/register";
@@ -14,40 +14,74 @@ import { ScrollView } from "react-native-gesture-handler";
 import React, { Component } from "react";
 import { View, Text } from "native-base";
 import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
-import SuggestScreen from "./screens/suggest/suggest";
 import { Provider } from 'react-redux';
 import { Store } from './shared/store';
 import OpenScreen from "./screens/open/open";
+import { Dimensions, Image } from "react-native";
+import CustomDrawerComponent from "./shared/components/drawer/custom-drawer";
+import SuggestScreen from "./screens/suggest/suggest";
 
+/*
 const CustomDrawerComponent = props => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#5A646B" }}>
-      <ScrollView>
+    <SafeAreaView 
+    forceInset={{ top: 'always', horizontal: 'never' }}
+    style={{
+      backgroundColor: "#69717E",
+      height: '75%',
+      width: '100%',
+      borderBottomRightRadius: 350,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      alignContent: 'flex-start',
+      paddingVertical: 20
+    }}>
+      <ScrollView style={{
+        flex: 1
+      }}>
         <DrawerItems
+          activeBackgroundColor="transparent"
+          activeLabelStyle="transparent"
+          activeTintColor="transparent"
+          activeItemKey="transparent"
+          itemStyle={{
+            height: 40
+          }}
           {...props}
           getLabel={scene => (
             <View style={{
-              marginTop: heightPercentageToDP('7%'),
-              paddingHorizontal: widthPercentageToDP('5%'),
+              paddingLeft: widthPercentageToDP('15%'),
               alignSelf: 'center'
-              }}>
+            }}>
               <Text style={{
                 fontFamily: 'quicksand-bold',
-                fontSize: widthPercentageToDP('3.7%'),
+                fontSize: widthPercentageToDP('4%'),
                 color: 'white'
-              }}>{props.getLabel(scene)}</Text>
+              }}>{props.getLabel(scene)}
+              </Text>
             </View>
           )}
         ></DrawerItems>
       </ScrollView>
+      <View style={{
+        flex: 0.4
+      }}>
+        <Image style={{
+          height: 70,
+          width: 70
+        }} source={require("./shared/assets/round_profile.png")} />
+      </View>
     </SafeAreaView>
   );
-};
+};*/
 
 const AppStack = createDrawerNavigator(
   {
     Home: {
-      screen: HomePage
+      screen: HomePage,
+      navigationOptions: {
+        drawerLabel: () => "Home"
+      }
     },
     Intro: {
       screen: IntroPage
@@ -67,7 +101,15 @@ const AppStack = createDrawerNavigator(
   },
   {
     initialRouteName: "Home",
-    contentComponent: CustomDrawerComponent
+    contentComponent: (props) => (
+      <CustomDrawerComponent navigation={props.navigation}></CustomDrawerComponent>
+    ),
+    drawerBackgroundColor: "transparent ",
+    drawerWidth: Dimensions.get('window').width,
+    contentOptions: {
+      activeTintColor: 'red',
+      activeBackgroundColor: 'transparent',
+    }
   }
 );
 
