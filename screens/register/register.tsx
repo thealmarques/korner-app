@@ -140,6 +140,10 @@ export default class RegisterPage extends React.Component<Props> {
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(async (user) => {
+        firebase.auth().currentUser.updateProfile({
+          displayName: this.state.name
+        });
+        
         if (this.state.base64Image) {
           await firebase
             .storage()

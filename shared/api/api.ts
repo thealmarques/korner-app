@@ -2,6 +2,7 @@ import * as firebase from "firebase";
 import { Business } from "../interfaces/business";
 import { sendNotification } from "./notifications";
 import { haversineDistance } from "../Helper";
+import { User } from "../interfaces/user";
 
 export function bindNotificationToken(token: string, uid: string) {
   firebase.firestore().collection("users").where('user', '==', uid).get().then((query) => {
@@ -141,4 +142,27 @@ async function getBusinessSuggestions(category: string, subcategory: string): Pr
         }
       });
   });
+}
+
+export function getUserBasicData(): Promise<User> {
+  return new Promise(async (resolve, reject) => {
+    await firebase.storage().ref("/profile-pictures/").child(firebase.auth().currentUser.uid).getDownloadURL()
+      .then(async (url) => {
+        resolve({
+          name: firebase.auth().currentUser.displayName,
+          photoUrl: url
+        });
+      })
+      .catch((error) => {
+        console.log(firebase.auth().currentUser);
+        resolve({
+          name: firebase.auth().currentUser.displayName,
+          photoUrl: ""
+        });
+      })
+  });
+}
+
+export function logout() {
+  firebase.auth().signOut();
 }

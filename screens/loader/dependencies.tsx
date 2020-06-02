@@ -4,7 +4,6 @@ import * as Font from "expo-font";
 import AuthenticationLoader from "./authentication-loader";
 import { Asset } from "expo-asset";
 import * as Permissions from "expo-permissions";
-import * as Location from "expo-location";
 import { connect } from "react-redux";
 import { userLocation } from "../../shared/store/actions";
 import { getLocation } from "../../shared/Helper";
@@ -45,7 +44,8 @@ class DependenciesLoader extends React.Component<Props> {
       require("../../shared/assets/upvote-green.png"),
       require("../../shared/assets/downvote-red.png"),
       require("../../shared/assets/upvote-grey.png"),
-      require("../../shared/assets/upvote-green.png")
+      require("../../shared/assets/upvote-green.png"),
+      require("../../shared/assets/empty_profile.png"),
     ]);
     await Font.loadAsync({
       "quicksand-regular": require("../../shared/assets/fonts/Quicksand-Regular.ttf"),

@@ -4,15 +4,24 @@ import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handl
 import { View, Text } from 'native-base';
 import { Image, Animated } from "react-native";
 import { DrawerActions } from "react-navigation-drawer";
+import { logout } from '../../../shared/api/api';
+import { connect } from "react-redux";
 
 interface Props {
     navigation: any;
+    name?: string;
+    photoUrl?: string;
 }
 
-export default class CustomDrawerComponent extends Component<Props> {
+class CustomDrawerComponent extends Component<Props> {
     state = {
         translateY: new Animated.Value(0),
-        opacity: new Animated.Value(0)
+        opacity: new Animated.Value(0),
+        photoOpacity: new Animated.Value(0)
+    }
+
+    constructor(props) {
+        super(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -25,26 +34,33 @@ export default class CustomDrawerComponent extends Component<Props> {
                 toValue: -50,
                 duration: 1000
             }).start();
+            Animated.timing(this.state.photoOpacity, {
+                toValue: 1,
+                duration: 1000
+            }).start();
         } else {
-            Animated.timing(this.state.opacity, {
+            Animated.timing(this.state.translateY, {
                 toValue: 0,
                 duration: 2000
             }).start();
-            Animated.timing(this.state.translateY, {
-                toValue: 50,
-                duration: 1500
+            Animated.timing(this.state.opacity, {
+                toValue: 0,
+                duration: 1000
+            }).start();
+            Animated.timing(this.state.photoOpacity, {
+                toValue: 0,
+                duration: 1000
             }).start();
         }
     }
 
     render() {
-
         return (
             <View style={{
                 flex: 1
             }}>
                 <SafeAreaView style={{
-                    backgroundColor: "#69717E",
+                    backgroundColor: "#5A646B",
                     height: '75%',
                     width: '100%',
                     borderBottomRightRadius: 350,
@@ -57,56 +73,59 @@ export default class CustomDrawerComponent extends Component<Props> {
                         flex: 1,
                         paddingLeft: 60
                     }}>
-                        <Text style={{
-                            fontFamily: 'quicksand-bold',
-                            fontSize: 14,
-                            color: 'white',
-                        }}>
-                            Home
-                    </Text>
-                        <Text style={{
-                            fontFamily: 'quicksand-bold',
-                            fontSize: 14,
-                            color: 'white',
-                            marginTop: 30
-                        }}>
-                            Settings
-                        </Text>
-                        <Text style={{
-                            fontFamily: 'quicksand-bold',
-                            fontSize: 14,
-                            color: 'white',
-                            marginTop: 30
-                        }}>
-                            Notifications
-                        </Text>
-                        <Text style={{
-                            fontFamily: 'quicksand-bold',
-                            fontSize: 14,
-                            color: 'white',
-                            marginTop: 30
-                        }}>
-                            My Posts
-                        </Text>
-                        <Text style={{
-                            fontFamily: 'quicksand-bold',
-                            fontSize: 14,
-                            color: 'white',
-                            marginTop: 30
-                        }}>
-                            Logout
-                        </Text>
+                        <TouchableWithoutFeedback
+                            onPress={() => {
+                                this.props.navigation.navigate("Home");
+                                this.closeDrawer();
+                            }}>
+                            <Text style={{
+                                fontFamily: 'quicksand-bold',
+                                fontSize: 16,
+                                letterSpacing: 2,
+                                color: 'white',
+                            }}>Home</Text>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback>
+                            <Text style={{
+                                fontFamily: 'quicksand-bold',
+                                fontSize: 16,
+                                letterSpacing: 2,
+                                color: 'white',
+                                marginTop: 30
+                            }}>Settings</Text>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback>
+                            <Text style={{
+                                fontFamily: 'quicksand-bold',
+                                fontSize: 16,
+                                letterSpacing: 2,
+                                color: 'white',
+                                marginTop: 30
+                            }}>Notifications</Text>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback>
+                            <Text style={{
+                                fontFamily: 'quicksand-bold',
+                                fontSize: 16,
+                                letterSpacing: 2,
+                                color: 'white',
+                                marginTop: 30
+                            }}>My Posts</Text>
+                        </TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback
+                            onPress={() => logout()}>
+                            <Text style={{
+                                fontFamily: 'quicksand-bold',
+                                fontSize: 16,
+                                letterSpacing: 2,
+                                color: 'white',
+                                marginTop: 30
+                            }}>Logout</Text>
+                        </TouchableWithoutFeedback>
                     </ScrollView>
                     <View style={{
                         flex: 0.5
-                    }}>
-                        <Image
-                            source={require("../../../shared/assets/round_profile.png")}
-                            style={{
-                                width: 70,
-                                height: 70
-                            }}></Image>
-                    </View>
+                    }}>{this.renderProfilePicture()}</View>
                 </SafeAreaView>
                 <Animated.View style={{
                     position: 'absolute',
@@ -118,13 +137,11 @@ export default class CustomDrawerComponent extends Component<Props> {
                     opacity: this.state.opacity
                 }}>
                     <TouchableWithoutFeedback
-                        onPress={() => {
-                            this.props.navigation.dispatch(DrawerActions.closeDrawer())
-                        }}
+                        onPress={() => this.closeDrawer()}
                         style={{
                             height: 50,
                             width: 50,
-                            backgroundColor: '#69717E',
+                            backgroundColor: '#5A646B',
                             borderRadius: 100,
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -140,4 +157,43 @@ export default class CustomDrawerComponent extends Component<Props> {
             </View>
         );
     }
+
+    closeDrawer() {
+        this.props.navigation.dispatch(DrawerActions.closeDrawer())
+    }
+
+    renderProfilePicture() {
+        if (this.props.photoUrl.length > 0) {
+            return (
+                <Animated.Image
+                    source={{
+                        uri: this.props.photoUrl
+                    }}
+                    style={{
+                        width: 70,
+                        height: 70,
+                        opacity: this.state.opacity,
+                        borderRadius: 50
+                    }}></Animated.Image>
+            );
+        } else {
+            return (
+                <Animated.Image
+                    source={require("../../../shared/assets/empty_profile.png")}
+                    style={{
+                        width: 55,
+                        height: 55,
+                        opacity: this.state.opacity
+                    }}></Animated.Image>
+            );
+        }
+
+    }
 }
+
+const mapStateToProps = (store) => ({
+    name: store.user.name,
+    photoUrl: store.user.photoUrl,
+});
+
+export default connect(mapStateToProps, null)(CustomDrawerComponent);
