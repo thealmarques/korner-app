@@ -124,8 +124,19 @@ class CustomDrawerComponent extends Component<Props> {
                         </TouchableWithoutFeedback>
                     </ScrollView>
                     <View style={{
-                        flex: 0.5
-                    }}>{this.renderProfilePicture()}</View>
+                        flex: 0.7,
+                        flexDirection: 'column',
+                        alignContent: 'center',
+                        alignItems: 'center'
+                    }}>{
+                    this.renderProfilePicture()}
+                    <Text style={{
+                        marginTop: 5,
+                        color: 'white',
+                        fontSize: 11,
+                        fontFamily: 'quicksand-bold'
+                    }}>Hi, {this.props.name}</Text>
+                    </View>
                 </SafeAreaView>
                 <Animated.View style={{
                     position: 'absolute',
