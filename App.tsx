@@ -20,6 +20,7 @@ import OpenScreen from "./screens/open/open";
 import { Dimensions, Image } from "react-native";
 import CustomDrawerComponent from "./shared/components/drawer/custom-drawer";
 import SuggestScreen from "./screens/suggest/suggest";
+import MyPosts from "./screens/myposts/posts";
 
 /*
 const CustomDrawerComponent = props => {
@@ -97,6 +98,9 @@ const AppStack = createDrawerNavigator(
       navigationOptions: {
         drawerLabel: () => null
       }
+    },
+    MyPosts: {
+      screen: MyPosts
     }
   },
   {

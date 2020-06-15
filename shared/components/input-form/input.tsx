@@ -10,7 +10,7 @@ interface Props {
   label: string;
   placeholder: string;
   password: boolean;
-  marginTop: string;
+  marginTop: number;
   callback: any;
 }
 

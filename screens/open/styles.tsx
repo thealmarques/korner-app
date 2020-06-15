@@ -1,6 +1,6 @@
 import EStyleSheet from "react-native-extended-stylesheet";
 import { Dimensions } from "react-native";
-import responsiveFactor from "./responsive";
+import responsiveFactor from "../../shared/constants/responsive";
 
 EStyleSheet.build({ $rem: Dimensions.get("window").width / responsiveFactor });
 

@@ -3,6 +3,12 @@ import { Business } from "../interfaces/business";
 import { sendNotification } from "./notifications";
 import { haversineDistance } from "../Helper";
 import { User } from "../interfaces/user";
+import { Coordinates } from "../interfaces/coordinates";
+
+export function getMyPosts(): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> {
+  return firebase.firestore()
+    .collection("suggestions").where('creator', '==', firebase.auth().currentUser.uid).get();
+}
 
 export function bindNotificationToken(token: string, uid: string) {
   firebase.firestore().collection("users").where('user', '==', uid).get().then((query) => {
@@ -35,8 +41,20 @@ export function updateBusinessData(data: Business) {
         } else {
           message = 'Someone disliked your post';
         }
+        registerNotification(data.creator, message, {
+          latitude: parseFloat(data.latitude),
+          longitude: parseFloat(data.longitude)
+        });
         sendNotification([token], message);
       });
+  });
+}
+
+function registerNotification(id: string, message: string, coordinates: Coordinates) {
+  firebase.firestore().collection("notifications").add({
+    id,
+    message,
+    coordinates
   });
 }
 
@@ -86,7 +104,8 @@ export function saveMarker(data: Business
     type: data.type,
     upvotes: [],
     downvotes: [],
-    creator: firebase.auth().currentUser.uid
+    creator: firebase.auth().currentUser.uid,
+    creationDate: new Date().toDateString()
   });
 }
 
@@ -125,6 +144,10 @@ export function findNearesBusinessSuggestions(target: Business) {
       firestoreRef.get().then((query) => {
         let message = 'A new business that you like has opened.';
         const token = query.docs[0].data().token;
+        registerNotification(target.creator, message, {
+          latitude: parseFloat(target.latitude),
+          longitude: parseFloat(target.longitude)
+        });
         sendNotification([token], message);
       });
     }

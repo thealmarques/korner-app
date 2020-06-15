@@ -46,6 +46,8 @@ class DependenciesLoader extends React.Component<Props> {
       require("../../shared/assets/upvote-grey.png"),
       require("../../shared/assets/upvote-green.png"),
       require("../../shared/assets/empty_profile.png"),
+      require("../../shared/assets/go-back.png"),
+      require("../../shared/assets/view.png")
     ]);
     await Font.loadAsync({
       "quicksand-regular": require("../../shared/assets/fonts/Quicksand-Regular.ttf"),

@@ -12,5 +12,6 @@ export interface Business {
     type: string,
     upvotes: string[],
     downvotes: string[],
-    creator?: string
+    creator?: string,
+    creationDate?: string
 }

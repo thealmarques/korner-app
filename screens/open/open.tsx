@@ -17,8 +17,8 @@ import * as ImagePicker from "expo-image-picker";
 import { BackHandler } from "react-native";
 import { convertUriToBlob, convertToBase64 } from "../../shared/Helper";
 import HorizontalTimePiker from "../../shared/components/time-picker/time-picker";
-import responsiveFactor from "./responsive";
 import { Business } from "../../shared/interfaces/business";
+import responsiveFactor from "../../shared/constants/responsive";
 
 interface Props {
   navigation: any;
