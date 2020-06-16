@@ -10,6 +10,11 @@ export function getMyPosts(): Promise<firebase.firestore.QuerySnapshot<firebase.
     .collection("suggestions").where('creator', '==', firebase.auth().currentUser.uid).get();
 }
 
+export function getMyNotifications(): Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>> {
+  return firebase.firestore()
+    .collection("notifications").where('id', '==', firebase.auth().currentUser.uid).get();
+}
+
 export function bindNotificationToken(token: string, uid: string) {
   firebase.firestore().collection("users").where('user', '==', uid).get().then((query) => {
     firebase.firestore().collection("users")
@@ -54,7 +59,8 @@ function registerNotification(id: string, message: string, coordinates: Coordina
   firebase.firestore().collection("notifications").add({
     id,
     message,
-    coordinates
+    coordinates,
+    creationDate: new Date().toDateString()
   });
 }
 

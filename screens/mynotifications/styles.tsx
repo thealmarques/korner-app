@@ -47,7 +47,7 @@ export const styles = EStyleSheet.create({
     },
     type: {
         fontFamily: 'quicksand-bold',
-        fontSize: '17rem',
+        fontSize: '16rem',
         marginBottom: '3rem',
         color: "#393939"
     },

@@ -10,10 +10,7 @@ import RegisterPage from "./screens/register/register";
 import HomePage from "./screens/home/home";
 import DependenciesLoader from "./screens/loader/dependencies";
 import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
-import { ScrollView } from "react-native-gesture-handler";
 import React, { Component } from "react";
-import { View, Text } from "native-base";
-import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
 import { Provider } from 'react-redux';
 import { Store } from './shared/store';
 import OpenScreen from "./screens/open/open";
@@ -21,6 +18,7 @@ import { Dimensions, Image } from "react-native";
 import CustomDrawerComponent from "./shared/components/drawer/custom-drawer";
 import SuggestScreen from "./screens/suggest/suggest";
 import MyPosts from "./screens/myposts/posts";
+import MyNotifications from "./screens/mynotifications/notifications";
 
 /*
 const CustomDrawerComponent = props => {
@@ -101,6 +99,9 @@ const AppStack = createDrawerNavigator(
     },
     MyPosts: {
       screen: MyPosts
+    },
+    MyNotifications: {
+      screen: MyNotifications
     }
   },
   {

@@ -14,7 +14,7 @@ interface Props {
     userLocation: any;
 }
 
-class MyPosts extends Component<Props> {
+class MyNotifications extends Component<Props> {
     render() {
         const { goBack } = this.props.navigation;
 
@@ -27,7 +27,7 @@ class MyPosts extends Component<Props> {
                             <Image style={styles.goBackImage} source={require('../../shared/assets/go-back.png')}></Image>
                         </TouchableWithoutFeedback>
                     </View>
-                    <Text style={styles.headerTitle}>My Posts</Text>
+                    <Text style={styles.headerTitle}>My Notifications</Text>
                 </View>
                 <ScrollView style={{
                     width: '100%',
@@ -40,23 +40,26 @@ class MyPosts extends Component<Props> {
     }
 
     renderPosts() {
-        const posts = this.props.navigation.state.params.posts as Business[];
+        const posts = this.props.navigation.state.params.posts;
 
-        return posts.map((post, index) => {
+        return posts.map((doc, index) => {
+            const post = doc.data();
             return (
                 <TouchableWithoutFeedback key={index} style={[styles.row]} onPress={() => this.showPost(post)}>
                     <View style={{
                         flexDirection: 'column',
                         alignItems: 'flex-start',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        width: '75%'
                     }}>
-                        <Text style={styles.type}>{post.type === 'open' ? 'Opened' : 'Suggested'}</Text>
-                        <Text style={styles.category}>{categories[parseInt(post.category, 10) - 1].title}</Text>
+                        <Text style={styles.type}>{post.message}</Text>
                     </View>
                     <View style={{
                         flexDirection: 'column',
                         alignItems: 'center',
+                        alignContent: 'flex-end',
                         justifyContent: 'space-between',
+                        width: '25%'
                     }}>
                         <Image style={styles.viewImage} source={require("../../shared/assets/view.png")}></Image>
                         <Text style={styles.date}>{post.creationDate}</Text>
@@ -66,12 +69,9 @@ class MyPosts extends Component<Props> {
         })
     }
 
-    showPost(post: Business) {
+    showPost(post: any) {
         const { goBack } = this.props.navigation;
-        this.props.userLocation({
-            longitude: post.longitude,
-            latitude: post.latitude
-        }, this.props.locationName);
+        this.props.userLocation(post.coordinates, this.props.locationName);
         goBack();
     }
 }
@@ -86,4 +86,4 @@ const mapStateToProps = (store) => ({
       dispatch(userLocation(coordinates, name)),
   });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyPosts);
+export default connect(mapStateToProps, mapDispatchToProps)(MyNotifications);

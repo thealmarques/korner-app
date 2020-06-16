@@ -4,7 +4,7 @@ import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handl
 import { View, Text } from 'native-base';
 import { Image, Animated } from "react-native";
 import { DrawerActions } from "react-navigation-drawer";
-import { logout, getMyPosts } from '../../../shared/api/api';
+import { logout, getMyPosts, getMyNotifications } from '../../../shared/api/api';
 import { connect } from "react-redux";
 import { styles } from "./styles";
 import { Business } from "../../interfaces/business";
@@ -71,7 +71,14 @@ class CustomDrawerComponent extends Component<Props> {
                         <TouchableWithoutFeedback>
                             <Text style={[styles.text, styles.marginTop]}>Settings</Text>
                         </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => {
+                            getMyNotifications().then((query) => {
+                                this.props.navigation.navigate("MyNotifications", {
+                                    posts: query.docs
+                                });
+                                this.closeDrawer();
+                            });
+                        }}>
                             <Text style={[styles.text, styles.marginTop]}>Notifications</Text>
                         </TouchableWithoutFeedback>
                         <TouchableWithoutFeedback onPress={() => {
