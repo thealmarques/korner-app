@@ -20,60 +20,6 @@ import SuggestScreen from "./screens/suggest/suggest";
 import MyPosts from "./screens/myposts/posts";
 import MyNotifications from "./screens/mynotifications/notifications";
 
-/*
-const CustomDrawerComponent = props => {
-  return (
-    <SafeAreaView 
-    forceInset={{ top: 'always', horizontal: 'never' }}
-    style={{
-      backgroundColor: "#69717E",
-      height: '75%',
-      width: '100%',
-      borderBottomRightRadius: 350,
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      alignContent: 'flex-start',
-      paddingVertical: 20
-    }}>
-      <ScrollView style={{
-        flex: 1
-      }}>
-        <DrawerItems
-          activeBackgroundColor="transparent"
-          activeLabelStyle="transparent"
-          activeTintColor="transparent"
-          activeItemKey="transparent"
-          itemStyle={{
-            height: 40
-          }}
-          {...props}
-          getLabel={scene => (
-            <View style={{
-              paddingLeft: widthPercentageToDP('15%'),
-              alignSelf: 'center'
-            }}>
-              <Text style={{
-                fontFamily: 'quicksand-bold',
-                fontSize: widthPercentageToDP('4%'),
-                color: 'white'
-              }}>{props.getLabel(scene)}
-              </Text>
-            </View>
-          )}
-        ></DrawerItems>
-      </ScrollView>
-      <View style={{
-        flex: 0.4
-      }}>
-        <Image style={{
-          height: 70,
-          width: 70
-        }} source={require("./shared/assets/round_profile.png")} />
-      </View>
-    </SafeAreaView>
-  );
-};*/
-
 const AppStack = createDrawerNavigator(
   {
     Home: {
